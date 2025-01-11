@@ -8,6 +8,7 @@
 *.so
 *.lock
 *.bin
+*.probe
 
 # Packages #
 ############
