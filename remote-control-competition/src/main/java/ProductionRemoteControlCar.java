@@ -1,18 +1,27 @@
-class ProductionRemoteControlCar {
+class ProductionRemoteControlCar implements RemoteControlCar, Comparable<ProductionRemoteControlCar> {
+    private static int DISTANCE = 10;
+    private int totalDistance;
+    private int totalVictories;
 
     public void drive() {
-        throw new UnsupportedOperationException("Please implement the ProductionRemoteControlCar.drive() method");
+        this.totalDistance += DISTANCE;    
     }
 
     public int getDistanceTravelled() {
-        throw new UnsupportedOperationException("Please implement the ProductionRemoteControlCar.getDistanceTravelled() method");
+        return this.totalDistance;
     }
 
     public int getNumberOfVictories() {
-        throw new UnsupportedOperationException("Please implement the ProductionRemoteControlCar.getNumberOfVictories() method");
+        return this.totalVictories;
     }
 
     public void setNumberOfVictories(int numberOfVictories) {
-        throw new UnsupportedOperationException("Please implement the ProductionRemoteControlCar.setNumberOfVictories() method");
+        this.totalVictories = numberOfVictories;
+    }
+
+    @Override
+    public int compareTo(ProductionRemoteControlCar otherCar) {
+        //return otherCar.totalDistance - this.totalVictories; //others had solved it this way instead, I thinkit might be better than mine
+        return Integer.compare(otherCar.getNumberOfVictories(), this.totalVictories); //reversed arguments for descending order
     }
 }
