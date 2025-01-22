@@ -9,11 +9,15 @@ public class GameMaster {
     }
 
     public String describe(TravelMethod method) {
-        return String.format("You're traveling to your destination %s.", (method == TravelMethod.WALKING)? "by walking" : "on horseback");
+        return String.format("You're traveling to your destination %s.",
+        switch (method) {
+            case WALKING -> "by walking";
+            case HORSEBACK -> "on horseback";
+        });
     }
 
     public String describe(Character character, Destination destination, TravelMethod method) {
-        return String.format("%s %s %s", describe(character), describe(method), describe(destination));
+        return String.join(" ", describe(character), describe(method), describe(destination));
     }
 
     public String describe(Character character, Destination destination) {
