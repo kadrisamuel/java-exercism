@@ -1,14 +1,16 @@
+// Better solution to think about https://exercism.org/tracks/java/exercises/darts/solutions/bobahop 
 class Darts {
+    final private static double INNER_CIRCLE = 1.0;
+    final private static double MIDDLE_CIRCLE = 5.0;
+    final private static double OUTER_CIRCLE = 10.0;
+
     int score(double xOfDart, double yOfDart) {
-        final double INNER_CIRCLE = 1;
-        final double MIDDLE_CIRCLE = 5 * 5;
-        final double OUTER_CIRCLE = 10 * 10;
 
-        double x2PlusY2 = Math.pow(Math.abs(xOfDart), 2) + Math.pow(Math.abs(yOfDart), 2);
+        double radius = Math.hypot(xOfDart, yOfDart);
 
-        if (x2PlusY2 <= OUTER_CIRCLE) {
-            if (x2PlusY2 <= MIDDLE_CIRCLE) {
-                if (x2PlusY2 <= INNER_CIRCLE) {
+        if (radius <= OUTER_CIRCLE) {
+            if (radius <= MIDDLE_CIRCLE) {
+                if (radius <= INNER_CIRCLE) {
                     return 10;
                 }
                 return 5;
