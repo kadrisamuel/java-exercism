@@ -1,17 +1,32 @@
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 class DnDCharacter {
+    private int strength;
+    private int dexterity;
+    private int constitution;
+    private int intelligence;
+    private int wisdom;
+    private int charisma;
+    private int hitpoints;
+    private boolean strengthSet;
+    private boolean dexteritySet;
+    private boolean constitutionSet;
+    private boolean intelligenceSet;
+    private boolean wisdomSet;
+    private boolean charismaSet;
+    private boolean hitpointsSet;
+
     ThreadLocalRandom random = ThreadLocalRandom.current();
 
     int ability(List<Integer> scores) {
-        scores.remove(scores.indexOf(Collections.min(scores)));
+        List<Integer> mutableList = new ArrayList<>(scores);
+        mutableList.remove(mutableList.indexOf(Collections.min(mutableList)));
         int sum = 0;
-        for (int i = 0; i < scores.size(); i++) {
-            sum += scores.get(i);
+        for (int i = 0; i < mutableList.size(); i++) {
+            sum += mutableList.get(i);
         }
         return sum;
     }
@@ -25,36 +40,62 @@ class DnDCharacter {
     }
 
     int modifier(int input) {
-        int modifier;
-        
-        return 1;
+        return (int) Math.floor(((double)(input - 10))/2);
     }
 
     int getStrength() {
-        throw new UnsupportedOperationException("Delete this statement and write your own implementation.");
+        if (!strengthSet) {
+            this.strength = ability(rollDice());
+            strengthSet = true;
+        }
+        return strength;
     }
 
     int getDexterity() {
-        throw new UnsupportedOperationException("Delete this statement and write your own implementation.");
+        if (!dexteritySet) {
+            this.dexterity = ability(rollDice());
+            dexteritySet = true;
+        }
+        return dexterity;
     }
 
     int getConstitution() {
-        throw new UnsupportedOperationException("Delete this statement and write your own implementation.");
+        if (!constitutionSet) {
+            this.constitution = ability(rollDice());
+            constitutionSet = true;
+        }
+        return constitution;
     }
 
     int getIntelligence() {
-        throw new UnsupportedOperationException("Delete this statement and write your own implementation.");
+        if (!intelligenceSet) {
+            this.intelligence = ability(rollDice());
+            intelligenceSet = true;
+        }
+        return intelligence;
     }
 
     int getWisdom() {
-        throw new UnsupportedOperationException("Delete this statement and write your own implementation.");
+        if (!wisdomSet) {
+            this.wisdom = ability(rollDice());
+            wisdomSet = true;
+        }
+        return wisdom;
     }
 
     int getCharisma() {
-        throw new UnsupportedOperationException("Delete this statement and write your own implementation.");
+        if (!charismaSet) {
+            this.charisma = ability(rollDice());
+            charismaSet = true;
+        }
+        return charisma;
     }
 
     int getHitpoints() {
-        throw new UnsupportedOperationException("Delete this statement and write your own implementation.");
+        if (!hitpointsSet) {
+            this.hitpoints = 10 + modifier(this.constitution);
+            hitpointsSet = true;
+        }
+        return hitpoints;
     }
 }
