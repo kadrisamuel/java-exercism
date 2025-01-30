@@ -1,17 +1,33 @@
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 class DnDCharacter {
+    ThreadLocalRandom random = ThreadLocalRandom.current();
 
     int ability(List<Integer> scores) {
-        throw new UnsupportedOperationException("Delete this statement and write your own implementation.");
+        scores.remove(scores.indexOf(Collections.min(scores)));
+        int sum = 0;
+        for (int i = 0; i < scores.size(); i++) {
+            sum += scores.get(i);
+        }
+        return sum;
     }
 
     List<Integer> rollDice() {
-        throw new UnsupportedOperationException("Delete this statement and write your own implementation.");
+        List<Integer> results = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            results.add(random.nextInt(1,7));
+        }
+        return results;
     }
 
     int modifier(int input) {
-        throw new UnsupportedOperationException("Delete this statement and write your own implementation.");
+        int modifier;
+        
+        return 1;
     }
 
     int getStrength() {
