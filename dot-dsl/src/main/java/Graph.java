@@ -1,38 +1,49 @@
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 
 public class Graph {
+    private Collection<Edge> edges = new ArrayList<>();
+    private Collection<Node> nodes = new ArrayList<>();
+    private Map<String, String> attributes = Collections.<String, String>emptyMap(); 
+
     public Graph() {
     }
 
     public Graph(Map<String, String> attributes) {
+        this.attributes = attributes;
     }
 
     public Collection<Node> getNodes() {
-        throw new UnsupportedOperationException("Delete this statement and write your own implementation.");
+        return this.nodes;
     }
 
     public Collection<Edge> getEdges() {
-        throw new UnsupportedOperationException("Delete this statement and write your own implementation.");
+        return this.edges;
     }
 
     public Graph node(String name) {
-        throw new UnsupportedOperationException("Delete this statement and write your own implementation.");
+        this.nodes.add(new Node(name));
+        return this;
     }
 
     public Graph node(String name, Map<String, String> attributes) {
-        throw new UnsupportedOperationException("Delete this statement and write your own implementation.");
+        this.nodes.add(new Node(name, attributes));
+        return this;
     }
 
     public Graph edge(String start, String end) {
-        throw new UnsupportedOperationException("Delete this statement and write your own implementation.");
+        this.edges.add(new Edge(start, end));
+        return this;
     }
 
     public Graph edge(String start, String end, Map<String, String> attributes) {
-        throw new UnsupportedOperationException("Delete this statement and write your own implementation.");
+        this.edges.add(new Edge(start, end, attributes));
+        return this;
     }
 
     public Map<String, String> getAttributes() {
-        throw new UnsupportedOperationException("Delete this statement and write your own implementation.");
+        return this.attributes;
     }
 }
