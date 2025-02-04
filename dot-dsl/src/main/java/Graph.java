@@ -1,17 +1,21 @@
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 public class Graph {
-    private Collection<Edge> edges = new ArrayList<>();
-    private Collection<Node> nodes = new ArrayList<>();
-    private Map<String, String> attributes = Collections.<String, String>emptyMap(); 
+    private Collection<Edge> edges;
+    private Collection<Node> nodes;
+    private Map<String, String> attributes; 
 
     public Graph() {
+        this.edges = new ArrayList<>();
+        this.nodes = new ArrayList<>();
+        this.attributes = new HashMap<>(); 
     }
 
     public Graph(Map<String, String> attributes) {
+        this();
         this.attributes = attributes;
     }
 
