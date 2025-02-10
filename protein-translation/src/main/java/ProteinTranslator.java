@@ -4,7 +4,6 @@ import java.util.List;
 
 class ProteinTranslator {
     private ArrayList<String> proteins = new ArrayList<String>();
-    private String protein;
 
     HashMap<String, String> codonProtein = new HashMap<>(){{
         put("AUG", "Methionine");
@@ -28,22 +27,25 @@ class ProteinTranslator {
 
     List<String> translate(String rnaSequence) throws IllegalArgumentException {
         for (int index = 0; index < rnaSequence.length(); index += 3) {
-            
+            String protein;
+
             try {
                 protein = codonProtein.get(rnaSequence.substring(index, index+3));
             } catch (Exception e) {
                 throw new IllegalArgumentException("Invalid codon");
             }
-
+            
             if (protein == null) {
                 throw new IllegalArgumentException("Invalid codon");
             }
+
             if (protein == "STOP") {
                 return proteins;
             }
 
             proteins.add(protein);
         }
+
         return proteins;
     }
 }
