@@ -5,7 +5,7 @@ import java.util.List;
 class ProteinTranslator {
     private ArrayList<String> proteins = new ArrayList<String>();
 
-    HashMap<String, String> codonProtein = new HashMap<>(){{
+    HashMap<String, String> mapping = new HashMap<>(){{
         put("AUG", "Methionine");
         put("UUU", "Phenylalanine");
         put("UUC", "Phenylalanine");
@@ -30,20 +30,20 @@ class ProteinTranslator {
             String protein;
 
             try {
-                protein = codonProtein.get(rnaSequence.substring(index, index+3));
-            } catch (Exception e) {
-                throw new IllegalArgumentException("Invalid codon");
-            }
-            
-            if (protein == null) {
+                protein = mapping.get(rnaSequence.substring(index, index+3));
+            } catch (IndexOutOfBoundsException e) {
                 throw new IllegalArgumentException("Invalid codon");
             }
 
-            if (protein == "STOP") {
-                return proteins;
+            switch (protein) {
+                case null:
+                    throw new IllegalArgumentException("Invalid codon");
+                case "STOP":
+                    return proteins;
+                default:
+                    proteins.add(protein);
+                    break;
             }
-
-            proteins.add(protein);
         }
 
         return proteins;
