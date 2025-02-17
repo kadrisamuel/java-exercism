@@ -8,27 +8,35 @@ class DiamondPrinter {
     List<String> printToList(char a) {
         // len on strings and whole list should be (index of char) * 2 + 1
         if (alfabet.contains(a)) {
-            System.out.println(a);
             int index = alfabet.indexOf(a);
-            System.out.println(index);
             int len = index * 2  + 1;
-            System.out.println(len);
 
-            for (int i = 0; i < len; i++) {
-                StringBuilder line = new StringBuilder(len);
-                if (i == index) {
-                    line.append(a);
-                    System.out.println("i == index " + line.toString());
-                } else {
-                    line.append(' ');
+            //make the top half of thr matrix
+            for (int line = 0; line <= index; line++) {
+                StringBuilder row = new StringBuilder(len);
+                for (int column = 0; column <= index; column++){
+                    if (line + column == index) {
+                        row.append(alfabet.get(line));
+                    } else {
+                        row.append(' ');
+                    }
+                    // mirror the left side of the row to right
+                    if (column == index) {
+                        for (int i = index - 1; i >= 0; i--) {
+                            row.append(row.charAt(i));
+                        }
+                    }
                 }
-                System.out.println("Diamond size " + diamond.size());
-                String temp = line.toString();
-                boolean success = diamond.add(temp);
-                System.out.println(success);
-                System.out.println("Diamond size " + diamond.size());
-                System.out.println("Diamond.add  " + diamond.toString());
+
+                diamond.add(row.toString());
+                System.out.println(diamond.toString());
             }
+
+            //mirror top half of matrix to bottom
+            for (int i = index - 1; i >= 0; i--) {
+                diamond.add(diamond.get(i));
+            }
+            System.out.println(diamond.toString());
         }
         return diamond;
     }
