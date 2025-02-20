@@ -38,18 +38,18 @@ class ZebraPuzzle {
     static final String[] pets = {"Dog", "Horse", "Snail", "Fox", "Zebra"};
     static final String[] hobbies = {"Dancing", "Painting", "Reading", "Football", "Chess"};
 
-    static Map<String, Integer> drinkMap = new HashMap<String, Integer>();
-    static Map<String, Integer> nationMap = new HashMap<String, Integer>();
-    static Map<String, Integer> colorMap = new HashMap<String, Integer>();
-    static Map<String, Integer> petMap = new HashMap<String, Integer>();
-    static Map<String, Integer> hobbyMap = new HashMap<String, Integer>();
+    static Map<Integer, String> drinkMap = new HashMap<Integer, String>();
+    static Map<Integer, String> nationMap = new HashMap<Integer, String>();
+    static Map<Integer, String> colorMap = new HashMap<Integer, String>();
+    static Map<Integer, String> petMap = new HashMap<Integer, String>();
+    static Map<Integer, String> hobbyMap = new HashMap<Integer, String>();
 
     static {
-        IntStream.range(0, 5).forEach(index -> drinkMap.put(drinks[index], index));
-        IntStream.range(0, 5).forEach(index -> nationMap.put(nationalities[index], index));
-        IntStream.range(0, 5).forEach(index -> colorMap.put(colors[index], index));
-        IntStream.range(0, 5).forEach(index -> petMap.put(pets[index], index));
-        IntStream.range(0, 5).forEach(index -> hobbyMap.put(hobbies[index], index));
+        IntStream.range(0, 5).forEach(index -> drinkMap.put(index, drinks[index]));
+        IntStream.range(0, 5).forEach(index -> nationMap.put(index, nationalities[index]));
+        IntStream.range(0, 5).forEach(index -> colorMap.put(index, colors[index]));
+        IntStream.range(0, 5).forEach(index -> petMap.put(index, pets[index]));
+        IntStream.range(0, 5).forEach(index -> hobbyMap.put(index, hobbies[index]));
     }
 
     static Set<Integer[]> perm4 = new HashSet<Integer[]>(24);
@@ -68,7 +68,6 @@ class ZebraPuzzle {
     public static void main(String[] args) {
     }
     
-
 
     public class Inhabitant {
         String nationality;
@@ -100,9 +99,45 @@ class ZebraPuzzle {
             inhabitants[i] = new Inhabitant();
             inhabitants[i].houseNumber = i+1;
         }
-        inhabitants[0].nationality = "Norwegian";
-        inhabitants[1].houseColor = "Blue";
-        inhabitants[2].drink = "Milk";
+        
+        // apply permutation recursively to all properties
+        for (Integer[] drink : perm4) {
+            inhabitants[0].drink = drinkMap.get(drink[0]);
+            inhabitants[1].drink = drinkMap.get(drink[1]);
+            inhabitants[2].drink = "Milk";
+            inhabitants[3].drink = drinkMap.get(drink[2]);
+            inhabitants[4].drink = drinkMap.get(drink[3]);
+            for (Integer[] nation : perm4) {
+                inhabitants[0].nationality = "Norwegian";
+                inhabitants[1].nationality = nationMap.get(nation[0]);
+                inhabitants[2].nationality = nationMap.get(nation[1]);
+                inhabitants[3].nationality = nationMap.get(nation[2]);
+                inhabitants[4].nationality = nationMap.get(nation[3]);
+                for (Integer[] color : perm4) {
+                    inhabitants[0].houseColor = colorMap.get(color[0]);
+                    inhabitants[1].houseColor = "White";
+                    inhabitants[2].houseColor = colorMap.get(color[1]);
+                    inhabitants[3].houseColor = colorMap.get(color[2]);
+                    inhabitants[4].houseColor = colorMap.get(color[3]);
+                    for (Integer[] pet : perm5) {
+                        inhabitants[0].pet = petMap.get(pet[0]);
+                        inhabitants[1].pet = petMap.get(pet[1]);
+                        inhabitants[2].pet = petMap.get(pet[2]);
+                        inhabitants[3].pet = petMap.get(pet[3]);
+                        inhabitants[4].pet = petMap.get(pet[4]);
+                        for (Integer[] hobby : perm5) {
+                            inhabitants[0].hobby = hobbyMap.get(hobby[0]);
+                            inhabitants[1].hobby = hobbyMap.get(hobby[1]);
+                            inhabitants[2].hobby = hobbyMap.get(hobby[2]);
+                            inhabitants[3].hobby = hobbyMap.get(hobby[3]);
+                            inhabitants[4].hobby = hobbyMap.get(hobby[4]);
+                            
+                        }
+                    }
+                }
+            }
+
+        }
     }
 
     void tryConfiguration() {
