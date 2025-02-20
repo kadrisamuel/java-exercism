@@ -1,29 +1,127 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.IntStream;
+
+/* Puzzle
+The following 15 statements are all known to be true:
+
+There are five houses.//
+The Englishman lives in the red house.
+The Spaniard owns the dog.
+The person in the green house drinks coffee.
+The Ukrainian drinks tea.
+The green house is immediately to the right of the ivory house.
+The snail owner likes to go dancing.
+The person in the yellow house is a painter.
+The person in the middle house drinks milk.//
+The Norwegian lives in the first house.//
+The person who enjoys reading lives in the house next to the person with the fox.
+The painter's house is next to the house with the horse.
+The person who plays football drinks orange juice.
+The Japanese person plays chess.
+The Norwegian lives next to the blue house.
+
+Additionally, each of the five houses is painted a different color, 
+and their inhabitants are of different national extractions, 
+own different pets, drink different beverages 
+and engage in different hobbies. */
 
 class ZebraPuzzle {
-    static String[] drinks = {"Coffee", "Tea", "Orange Juice", "Water"}; // "Milk"
-    static String[] nationalities = {"Englishman", "Spaniard", "Ukrainian", "Japanese"}; // "Norwegian"
-    static String[] colors = {"Red", "Yellow", "Ivory", "Green"}; // "Blue"
-    static String[] pets = {"Dog", "Horse", "Snail", "Fox", "Zebra"};
-    static String[] hobbies = {"Dancing", "Painting", "Reading", "Football", "Chess"};
-    static Integer[] fourIndices = {0, 1, 2, 3};
-    static Integer[] fiveIndices = {0, 1, 2, 3, 4};
+    static final String[] drinks = {"Coffee", "Tea", "Orange Juice", "Water", "Milk"}; // "Milk"
+    static final String[] nationalities = {"Englishman", "Spaniard", "Ukrainian", "Japanese", "Norwegian"}; // "Norwegian"
+    static final String[] colors = {"Red", "Yellow", "Ivory", "Green", "Blue"}; // "Blue"
+    static final String[] pets = {"Dog", "Horse", "Snail", "Fox", "Zebra"};
+    static final String[] hobbies = {"Dancing", "Painting", "Reading", "Football", "Chess"};
+
+    static Map<String, Integer> drinkMap = new HashMap<String, Integer>();
+    static Map<String, Integer> nationMap = new HashMap<String, Integer>();
+    static Map<String, Integer> colorMap = new HashMap<String, Integer>();
+    static Map<String, Integer> petMap = new HashMap<String, Integer>();
+    static Map<String, Integer> hobbyMap = new HashMap<String, Integer>();
+
+    static {
+        IntStream.range(0, 5).forEach(index -> drinkMap.put(drinks[index], index));
+        IntStream.range(0, 5).forEach(index -> nationMap.put(nationalities[index], index));
+        IntStream.range(0, 5).forEach(index -> colorMap.put(colors[index], index));
+        IntStream.range(0, 5).forEach(index -> petMap.put(pets[index], index));
+        IntStream.range(0, 5).forEach(index -> hobbyMap.put(hobbies[index], index));
+    }
+
+    static Set<Integer[]> perm4 = new HashSet<Integer[]>(24);
+    static Set<Integer[]> perm5 = new HashSet<Integer[]>(120);
+    static final Integer[] fourIndices = {0, 1, 2, 3};
+    static final Integer[] fiveIndices = {0, 1, 2, 3, 4};
+
+    static {
+        perm4 = permutationGen(fourIndices);
+        perm5 = permutationGen(fiveIndices);
+    }
+
     Inhabitant[] inhabitants = new Inhabitant[5];
-    Set<Integer[]> perm4 = new HashSet<Integer[]>(24);
-    Set<Integer[]> perm5 = new HashSet<Integer[]>(120);
+
 
     public static void main(String[] args) {
-        Set<Integer[]> test = permutationGen(fourIndices);
-        for (Integer[] line : test) {
-            System.out.println(Arrays.toString(line));
-        }
     }
     
-    public static Set<Integer[]> permutationGen(Integer[] input) {
+
+
+    public class Inhabitant {
+        String nationality;
+        String pet;
+        String drink;
+        String hobby;
+        String houseColor;
+        int houseNumber;
+    }
+
+    public void printInhabitants() {
+        for (Inhabitant inhabitant : inhabitants) {
+            System.out.println("Inhabitant in house nr " + inhabitant.houseNumber);
+            System.out.println(inhabitant.nationality);
+            System.out.println(inhabitant.houseNumber);
+            System.out.println(inhabitant.houseColor);
+            System.out.println(inhabitant.hobby);
+            System.out.println(inhabitant.pet);
+        }
+    }
+
+
+//
+//  Methods to create inhabitant data based on permutations TODO
+//
+    // Makes 5 inhabitant objects, assigns knows properties to them
+    void assignPropertiesToInhabitants() {
+        for (int i = 0; i < 5; i++) {
+            inhabitants[i] = new Inhabitant();
+            inhabitants[i].houseNumber = i+1;
+        }
+        inhabitants[0].nationality = "Norwegian";
+        inhabitants[1].houseColor = "Blue";
+        inhabitants[2].drink = "Milk";
+    }
+
+    void tryConfiguration() {
+        for (int i = 0; i < 5; i++) {
+            inhabitants[i].pet = pets[i];
+            if (pets[i] == "Dog" && inhabitants[i].nationality != null ) {
+                inhabitants[i].nationality = "Spaniard";
+            }
+            if (pets[i] == "Snail" && inhabitants[i].hobby != null) {
+                inhabitants[i].hobby = "Dancing";
+            }
+
+        }
+        
+    }
+//
+//  Method to generate permutations
+//
+    static Set<Integer[]> permutationGen(Integer[] input) {
         Set<Integer[]> perm = new HashSet<Integer[]>();
         // Base case to end recursion
         if (input.length == 0) {
@@ -51,51 +149,10 @@ class ZebraPuzzle {
 
 
 
-    public class Inhabitant {
-        String nationality;
-        String pet;
-        String drink;
-        String hobby;
-        String houseColor;
-        int houseNumber;
-    }
 
-    public void printInhabitants() {
-        for (Inhabitant inhabitant : inhabitants) {
-            System.out.println("Inhabitant in house nr " + inhabitant.houseNumber);
-            System.out.println(inhabitant.nationality);
-            System.out.println(inhabitant.houseNumber);
-            System.out.println(inhabitant.houseColor);
-            System.out.println(inhabitant.hobby);
-            System.out.println(inhabitant.pet);
-        }
-    }
-
-    // Makes 5 inhabitant objects, assigns knows properties to them
-    void assignPropertiesToInhabitants() {
-        for (int i = 0; i < 5; i++) {
-            inhabitants[i] = new Inhabitant();
-            inhabitants[i].houseNumber = i+1;
-        }
-        inhabitants[0].nationality = "Norwegian";
-        inhabitants[1].houseColor = "Blue";
-        inhabitants[2].drink = "Milk";
-    }
-
-    void tryConfiguration() {
-        for (int i = 0; i < 5; i++) {
-            inhabitants[i].pet = pets[i];
-            if (pets[i] == "Dog" && inhabitants[i].nationality != null ) {
-                inhabitants[i].nationality = "Spaniard";
-            }
-            if (pets[i] == "Snail" && inhabitants[i].hobby != null) {
-                inhabitants[i].hobby = "Dancing";
-            }
-
-        }
-        
-    }
-
+//
+//  Method to check if a permutation has the correct solution
+//
     boolean validateConfiguration() {
         for (Inhabitant inhabitant : inhabitants) {
             try {
@@ -203,31 +260,10 @@ class ZebraPuzzle {
         return true;
     }
 
-/* Puzzle
-The following 15 statements are all known to be true:
 
-There are five houses.//
-The Englishman lives in the red house.
-The Spaniard owns the dog.
-The person in the green house drinks coffee.
-The Ukrainian drinks tea.
-The green house is immediately to the right of the ivory house.
-The snail owner likes to go dancing.
-The person in the yellow house is a painter.
-The person in the middle house drinks milk.//
-The Norwegian lives in the first house.//
-The person who enjoys reading lives in the house next to the person with the fox.
-The painter's house is next to the house with the horse.
-The person who plays football drinks orange juice.
-The Japanese person plays chess.
-The Norwegian lives next to the blue house.
-
-Additionally, each of the five houses is painted a different color, 
-and their inhabitants are of different national extractions, 
-own different pets, drink different beverages 
-and engage in different hobbies. */
-
-    
+//
+//  Getter methods used by tests
+//  
     String getWaterDrinker() {
         assignPropertiesToInhabitants();
         tryConfiguration();
