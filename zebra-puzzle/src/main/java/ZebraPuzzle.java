@@ -1,11 +1,56 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 class ZebraPuzzle {
     static String[] drinks = {"Coffee", "Tea", "Orange Juice", "Water"}; // "Milk"
     static String[] nationalities = {"Englishman", "Spaniard", "Ukrainian", "Japanese"}; // "Norwegian"
     static String[] colors = {"Red", "Yellow", "Ivory", "Green"}; // "Blue"
     static String[] pets = {"Dog", "Horse", "Snail", "Fox", "Zebra"};
     static String[] hobbies = {"Dancing", "Painting", "Reading", "Football", "Chess"};
+    static Integer[] fourIndices = {0, 1, 2, 3};
+    static Integer[] fiveIndices = {0, 1, 2, 3, 4};
     Inhabitant[] inhabitants = new Inhabitant[5];
+    Set<Integer[]> perm4 = new HashSet<Integer[]>(24);
+    Set<Integer[]> perm5 = new HashSet<Integer[]>(120);
+
+    public static void main(String[] args) {
+        Set<Integer[]> test = permutationGen(fourIndices);
+        for (Integer[] line : test) {
+            System.out.println(Arrays.toString(line));
+        }
+    }
     
+    public static Set<Integer[]> permutationGen(Integer[] input) {
+        Set<Integer[]> perm = new HashSet<Integer[]>();
+        // Base case to end recursion
+        if (input.length == 0) {
+            perm.add(input);
+            return perm;
+        }
+        // Recursive case
+        int initial = input[0]; // first element
+        Integer[] rem = Arrays.copyOfRange(input, 1, input.length); // Full array without first element
+        Set<Integer[]> combinations = permutationGen(rem);
+        for (Integer[] combo : combinations) {
+            for (int i = 0; i<=combo.length; i++){
+                perm.add(permutate(combo, initial, i));
+            }
+        }
+        return perm;
+    }
+
+    static Integer[] permutate(Integer[] origin, int element, int index) {
+        List<Integer> result = new ArrayList<>(Arrays.asList(origin));
+        result.add(index, element);
+        return result.toArray(new Integer[0]);
+    }
+
+
+
+
     public class Inhabitant {
         String nationality;
         String pet;
@@ -53,90 +98,106 @@ class ZebraPuzzle {
 
     boolean validateConfiguration() {
         for (Inhabitant inhabitant : inhabitants) {
-            // The Englishman lives in the red house.
-            if (inhabitant.nationality == "Englishman") {
-                if (inhabitant.houseColor != "Red") {
-                    return false;
+            try {
+                // The Englishman lives in the red house.
+                if (inhabitant.nationality == "Englishman") {
+                    if (inhabitant.houseColor != "Red") {
+                        return false;
+                    }
                 }
-            }
-            // The Spaniard owns the dog.
-            if (inhabitant.nationality == "Spaniard") {
-                if (inhabitant.pet != "Dog") {
-                    return false;
+                // The Spaniard owns the dog.
+                if (inhabitant.nationality == "Spaniard") {
+                    if (inhabitant.pet != "Dog") {
+                        return false;
+                    }
                 }
-            }
-            // The person in the green house drinks coffee
-            if (inhabitant.houseColor == "Green") {
-                if (inhabitant.drink != "Coffee") {
-                    return false;
+                // The person in the green house drinks coffee
+                if (inhabitant.houseColor == "Green") {
+                    if (inhabitant.drink != "Coffee") {
+                        return false;
+                    }
+                    // The first house cannot be green, see explanatio below
+                    if (inhabitant.houseNumber == 1) {
+                        return false;
+                    }
+                    // The green house is immediately to the right of the ivory house.
+                    try {
+                        if (inhabitants[inhabitant.houseNumber-2].houseColor != "Ivory") {
+                            return false;
+                        }
+                    } catch (Exception e) {
+                        return false;
+                    }
+                    
                 }
+                // The Ukrainian drinks tea.
+                if (inhabitant.nationality == "Ukrainian") {
+                    if (inhabitant.houseColor != "Tea") {
+                        return false;
+                    }
+                }
+                // The snail owner likes to go dancing.
+                if (inhabitant.pet == "Snail") {
+                    if (inhabitant.hobby != "Dancing") {
+                        return false;
+                    }
+                }
+                // The person in the yellow house is a painter.
+                if (inhabitant.houseColor == "Yellow") {
+                    if (inhabitant.hobby != "Painting") {
+                        return false;
+                    }
+                    // The painter's house is next to the house with the horse.
+                    try {
+                        if (!(inhabitants[inhabitant.houseNumber-2].pet == "Horse" || inhabitants[inhabitant.houseNumber+2].pet == "Horse")) {
+                            return false;
+                        }
+                    } catch (Exception e) {
+                        return false;
+                    }
+                }
+                // The person who enjoys reading lives in the house next to the person with the fox.
+                if (inhabitant.hobby == "Reading") {
+                    try {
+                        if (!(inhabitants[inhabitant.houseNumber-2].pet == "Fox" || inhabitants[inhabitant.houseNumber+2].pet == "Fox")) {
+                            return false;
+                        }
+                    } catch (Exception e) {
+                        return false;
+                    }
+                }
+                // The person who plays football drinks orange juice.
+                if (inhabitant.hobby == "Football") {
+                    if (inhabitant.drink != "Orange Juice") {
+                        return false;
+                    }
+                }
+                // The Japanese person plays chess.
+                if (inhabitant.nationality == "Japanese") {
+                    if (inhabitant.hobby != "Chess") {
+                        return false;
+                    }
+                }
+                // The Norwegian lives in the first house.
+                // The Norwegian lives next to the blue house.
+                // => second house must be blue
                 // The green house is immediately to the right of the ivory house.
-                try {
-                    if (inhabitants[inhabitant.houseNumber-2].houseColor != "Ivory") {
+                // => first house cannot be green (because first house is next to blue house and has only one neighbor) 
+                // or blue (because the second house is blue).
+                if (inhabitant.nationality == "Norwegian") {
+                    if (inhabitant.houseNumber != 1 || inhabitant.houseColor == "Green" || inhabitant.houseColor == "Blue") {
                         return false;
                     }
-                } catch (Exception e) {
-                    return false;
-                }
-                
-            }
-            // The Ukrainian drinks tea.
-            if (inhabitant.nationality == "Ukrainian") {
-                if (inhabitant.houseColor != "Tea") {
-                    return false;
-                }
-            }
-            // The snail owner likes to go dancing.
-            if (inhabitant.pet == "Snail") {
-                if (inhabitant.hobby != "Dancing") {
-                    return false;
-                }
-            }
-            // The person in the yellow house is a painter.
-            if (inhabitant.houseColor == "Yellow") {
-                if (inhabitant.hobby != "Painting") {
-                    return false;
-                }
-                // The painter's house is next to the house with the horse.
-                try {
-                    if (!(inhabitants[inhabitant.houseNumber-2].pet == "Horse" || inhabitants[inhabitant.houseNumber+2].pet == "Horse")) {
+                    try {
+                        if (!(inhabitants[inhabitant.houseNumber+2].houseColor == "Blue")) {
+                            return false;
+                        }
+                    } catch (Exception e) {
                         return false;
                     }
-                } catch (Exception e) {
-                    return false;
                 }
-            }
-            // The person who enjoys reading lives in the house next to the person with the fox.
-            if (inhabitant.hobby == "Reading") {
-                try {
-                    if (!(inhabitants[inhabitant.houseNumber-2].pet == "Fox" || inhabitants[inhabitant.houseNumber+2].pet == "Fox")) {
-                        return false;
-                    }
-                } catch (Exception e) {
-                    return false;
-                }
-            }
-            // The person who plays football drinks orange juice.
-            if (inhabitant.hobby == "Football") {
-                if (inhabitant.drink != "Orange Juice") {
-                    return false;
-                }
-            }
-            // The Japanese person plays chess.
-            if (inhabitant.nationality == "Japanese") {
-                if (inhabitant.hobby != "Chess") {
-                    return false;
-                }
-            }
-            // The Norwegian lives next to the blue house.
-            if (inhabitant.nationality == "Norwegian") {
-                try {
-                    if (!(inhabitants[inhabitant.houseNumber-2].houseColor == "Blue" || inhabitants[inhabitant.houseNumber+2].houseColor == "Blue")) {
-                        return false;
-                    }
-                } catch (Exception e) {
-                    return false;
-                }
+            } catch (Exception e) {
+                System.err.println(e + " property might be empty");
             }
         }
         return true;
