@@ -50,6 +50,19 @@ class ZebraPuzzle {
     static Map< String, Integer> revPetMap =    new HashMap< String, Integer>();
     static Map< String, Integer> revHobbyMap =  new HashMap< String, Integer>();
 
+    static Set<Integer[]> perm4 = new HashSet<Integer[]>(24);
+    static Set<Integer[]> perm5 = new HashSet<Integer[]>(120);
+    static final Integer[] fourIndices = {0, 1, 2, 3};
+    static final Integer[] fiveIndices = {0, 1, 2, 3, 4};
+
+    static Inhabitant[] inhabitants = new Inhabitant[5];
+    static Inhabitant[] inhabitantTest = new Inhabitant[5];
+
+    static {
+        perm4 = permutationGen(fourIndices);
+        perm5 = permutationGen(fiveIndices);
+    }
+
     static {
         IntStream.range(0, 5).forEach(index ->  drinkMap.put(index, drinks[index]));
         IntStream.range(0, 5).forEach(index -> nationMap.put(index, nationalities[index]));
@@ -64,38 +77,27 @@ class ZebraPuzzle {
         IntStream.range(0, 5).forEach(index ->  revHobbyMap.put(hobbies[index],       index));
     }
 
-    static Set<Integer[]> perm4 = new HashSet<Integer[]>(24);
-    static Set<Integer[]> perm5 = new HashSet<Integer[]>(120);
-    static final Integer[] fourIndices = {0, 1, 2, 3};
-    static final Integer[] fiveIndices = {0, 1, 2, 3, 4};
-
-    static {
-        perm4 = permutationGen(fourIndices);
-        perm5 = permutationGen(fiveIndices);
-    }
-
-    Inhabitant[] inhabitants = new Inhabitant[5];
-    static Inhabitant[] inhabitantTest = new Inhabitant[5];
 
 
     public static void main(String[] args) {
         ZebraPuzzle test = new ZebraPuzzle();
         //perm5.forEach(array -> System.out.println(Arrays.toString(array)));
 
-        //System.out.println();
-        //boolean solutionExists = test.assignPropertiesToInhabitants();
-        //if (!solutionExists) {
-        //    System.out.println("Couldn't find a solution");
-        //}
-
-        ZebraPuzzle test2 = new ZebraPuzzle();
-        test2.assignCorrectProperties(inhabitantTest);
-        boolean correctSolutionExists = test2.testPermutation(2, inhabitantTest);
-        if (correctSolutionExists) {
-            System.out.println("Solution!");
-        } else {
-            System.out.println("So sad!");
+        System.out.println();
+        test.assignPropertiesToInhabitants(inhabitants);
+        boolean solutionExists = test.testPermutation(2, inhabitants);
+        if (!solutionExists) {
+            System.out.println("Couldn't find a solution");
         }
+
+        //ZebraPuzzle test2 = new ZebraPuzzle();
+        //test2.assignCorrectProperties(inhabitantTest);
+        //boolean correctSolutionExists = test2.testPermutation(2, inhabitantTest);
+        //if (correctSolutionExists) {
+        //    System.out.println("Solution!");
+        //} else {
+        //    System.out.println("So sad!");
+        //}
     }
     
 
@@ -120,7 +122,7 @@ class ZebraPuzzle {
     }
 
 //
-//  Method that creates the correct solution for testing
+//  Method that creates the correct solution (for testing purposes)
 //
     public Inhabitant[] assignCorrectProperties(Inhabitant[] inhabitants) {
         for (int i = 0; i < 5; i++) {
@@ -314,7 +316,7 @@ class ZebraPuzzle {
                         }
                         // The first house cannot be green, see explanatio below
                         if (inhabitant.houseNumber == 1) {
-                            System.out.println("The first house cannot be green, see explanatio below");
+                            System.out.println("The first house cannot be green");
                             return false;
                         }
                         // The green house is immediately to the right of the ivory house.
@@ -325,7 +327,6 @@ class ZebraPuzzle {
                             }
                         } catch (Exception e) {
                             System.err.println("Exception within: The person in the green house drinks coffee" + e);
-                            return false;
                         }
                         
                     }
@@ -356,7 +357,6 @@ class ZebraPuzzle {
                            }
                        } catch (Exception e) {
                            System.err.println("Exception occurred within: The Norwegian lives in the first house." + e);
-                           return false;
                        }
                     }
                 }
@@ -400,13 +400,12 @@ class ZebraPuzzle {
                     // The person who enjoys reading lives in the house next to the person with the fox.
                     if (inhabitant.hobby == revHobbyMap.get("Reading")) {
                         try {
-                            if (!(inhabitants[inhabitant.houseNumber-2].pet == revPetMap.get("Fox") || inhabitants[inhabitant.houseNumber+2].pet == revPetMap.get("Fox"))) {
+                            if (!(inhabitants[inhabitant.houseNumber-2].pet == revPetMap.get("Fox") || inhabitants[inhabitant.houseNumber].pet == revPetMap.get("Fox"))) {
                                 System.out.println("The person who enjoys reading lives in the house next to the person with the fox.");
                                 return false;
                             }
                         } catch (Exception e) {
                             System.err.println("Exception occurred within: The person who enjoys reading lives in the house next to the person with the fox. " + e);
-                            return false;
                         }
                     }
                     // The person who plays football drinks orange juice.
