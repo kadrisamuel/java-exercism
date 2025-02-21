@@ -1,10 +1,4 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.IntStream;
 
 class ZebraPuzzle {
@@ -53,11 +47,10 @@ class ZebraPuzzle {
         IntStream.range(0, 5).forEach(index ->  revHobbyMap.put(hobbies[index],       index));
     }
 
-static {
-    ZebraPuzzle puzzle = new ZebraPuzzle();
-    inhabitants = puzzle.assignPropertiesToInhabitants(inhabitants);
-
-}
+    static {
+        ZebraPuzzle puzzle = new ZebraPuzzle();
+        inhabitants = puzzle.assignPropertiesToInhabitants(inhabitants);
+    }
 
     public static void main(String[] args) {
         //ZebraPuzzle test = new ZebraPuzzle();
@@ -294,7 +287,7 @@ static {
                         }
                         // The green house is immediately to the right of the ivory house.
                         try {
-                            if (inhabitants[inhabitant.houseNumber-2].houseColor != revColorMap.get("Ivory")) {
+                            if (inhabitant.houseNumber > 1 && inhabitants[inhabitant.houseNumber-2].houseColor != revColorMap.get("Ivory")) {
                                 System.out.println("The green house is immediately to the right of the ivory house.");
                                 return false;
                             }
@@ -324,7 +317,7 @@ static {
                             return false;
                         }
                        try {
-                           if (!(inhabitants[inhabitant.houseNumber].houseColor == revColorMap.get("Blue"))) {
+                           if (inhabitant.houseNumber < 5 && !(inhabitants[inhabitant.houseNumber].houseColor == revColorMap.get("Blue"))) {
                                System.out.println("The Norwegian lives in the first house. 2. if");
                                return false;
                            }
@@ -358,14 +351,18 @@ static {
                         }
                         // The painter's house is next to the house with the horse.
                         try {
-                            if (!(inhabitants[inhabitant.houseNumber-2].pet == revPetMap.get("Horse") )) {
+                           
+                            if (inhabitant.houseNumber > 1 && !(inhabitants[inhabitant.houseNumber-2].pet == revPetMap.get("Horse") )) {
                                 System.out.println("The painter's house is next to the house with the horse.");
                                 return false;
                             }
-                            if (!(inhabitants[inhabitant.houseNumber].pet == revPetMap.get("Horse"))) {
+                        
+                        
+                            if (inhabitant.houseNumber < 5 && !(inhabitants[inhabitant.houseNumber].pet == revPetMap.get("Horse"))) {
                                 System.out.println("The painter's house is next to the house with the horse.");
                                 return false;
                             }
+                        
                         } catch (Exception e) {
                             System.err.println("Exception occurred within: The painter's house is next to the house with the horse. " + e);
                         }
@@ -373,10 +370,18 @@ static {
                     // The person who enjoys reading lives in the house next to the person with the fox.
                     if (inhabitant.hobby == revHobbyMap.get("Reading")) {
                         try {
-                            if (!(inhabitants[inhabitant.houseNumber-2].pet == revPetMap.get("Fox") || inhabitants[inhabitant.houseNumber].pet == revPetMap.get("Fox"))) {
-                                System.out.println("The person who enjoys reading lives in the house next to the person with the fox.");
+                            
+                            if (inhabitant.houseNumber > 1 && !(inhabitants[inhabitant.houseNumber-2].pet == revPetMap.get("Fox"))) {
+                                System.out.println("The person who enjoys reading lives in the house next to the person with the fox. 1");
                                 return false;
                             }
+                        
+                            
+                            if (inhabitant.houseNumber < 5 && !(inhabitants[inhabitant.houseNumber].pet == revPetMap.get("Fox"))) {
+                                System.out.println("The person who enjoys reading lives in the house next to the person with the fox. 2");
+                                return false;
+                            }
+                        
                         } catch (Exception e) {
                             System.err.println("Exception occurred within: The person who enjoys reading lives in the house next to the person with the fox. " + e);
                         }
