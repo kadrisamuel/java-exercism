@@ -32,9 +32,9 @@ own different pets, drink different beverages
 and engage in different hobbies. */
 
 class ZebraPuzzle {
-    static final String[] drinks = {"Coffee", "Tea", "Orange Juice", "Water"}; // "Milk"
-    static final String[] nationalities = {"Englishman", "Spaniard", "Ukrainian", "Japanese"}; // "Norwegian"
-    static final String[] colors = {"Red", "Yellow", "Ivory", "Green"}; // "Blue"
+    static final String[] drinks = {"Coffee", "Tea", "Orange Juice", "Water", "Milk"}; // "Milk"
+    static final String[] nationalities = {"Englishman", "Spaniard", "Ukrainian", "Japanese", "Norwegian"}; // "Norwegian"
+    static final String[] colors = {"Red", "Yellow", "Ivory", "Green", "Blue"}; // "Blue"
     static final String[] pets = {"Dog", "Horse", "Snail", "Fox", "Zebra"};
     static final String[] hobbies = {"Dancing", "Painting", "Reading", "Football", "Chess"};
 
@@ -44,12 +44,24 @@ class ZebraPuzzle {
     static Map<Integer, String> petMap = new HashMap<Integer, String>();
     static Map<Integer, String> hobbyMap = new HashMap<Integer, String>();
 
+    static Map< String, Integer> revDrinkMap =  new HashMap< String, Integer>();
+    static Map< String, Integer> revNationMap = new HashMap< String, Integer>();
+    static Map< String, Integer> revColorMap =  new HashMap< String, Integer>();
+    static Map< String, Integer> revPetMap =    new HashMap< String, Integer>();
+    static Map< String, Integer> revHobbyMap =  new HashMap< String, Integer>();
+
     static {
-        IntStream.range(0, 4).forEach(index -> drinkMap.put(index, drinks[index]));
-        IntStream.range(0, 4).forEach(index -> nationMap.put(index, nationalities[index]));
-        IntStream.range(0, 4).forEach(index -> colorMap.put(index, colors[index]));
-        IntStream.range(0, 5).forEach(index -> petMap.put(index, pets[index]));
-        IntStream.range(0, 5).forEach(index -> hobbyMap.put(index, hobbies[index]));
+        IntStream.range(0, 5).forEach(index ->  drinkMap.put(index, drinks[index]));
+        IntStream.range(0, 5).forEach(index -> nationMap.put(index, nationalities[index]));
+        IntStream.range(0, 5).forEach(index ->  colorMap.put(index, colors[index]));
+        IntStream.range(0, 5).forEach(index ->    petMap.put(index, pets[index]));
+        IntStream.range(0, 5).forEach(index ->  hobbyMap.put(index, hobbies[index]));
+
+        IntStream.range(0, 5).forEach(index ->  revDrinkMap.put(drinks[index],        index));
+        IntStream.range(0, 5).forEach(index -> revNationMap.put(nationalities[index], index));
+        IntStream.range(0, 5).forEach(index ->  revColorMap.put(colors[index],        index));
+        IntStream.range(0, 5).forEach(index ->    revPetMap.put(pets[index],          index));
+        IntStream.range(0, 5).forEach(index ->  revHobbyMap.put(hobbies[index],       index));
     }
 
     static Set<Integer[]> perm4 = new HashSet<Integer[]>(24);
@@ -63,34 +75,40 @@ class ZebraPuzzle {
     }
 
     Inhabitant[] inhabitants = new Inhabitant[5];
-    Inhabitant[] inhabitantTest = new Inhabitant[5];
+    static Inhabitant[] inhabitantTest = new Inhabitant[5];
 
 
     public static void main(String[] args) {
         ZebraPuzzle test = new ZebraPuzzle();
-        boolean solutionExists = test.assignPropertiesToInhabitants();
-        if (!solutionExists) {
-            System.out.println("Couldn't find a solution");
-        }
+        //perm5.forEach(array -> System.out.println(Arrays.toString(array)));
+
+        //System.out.println();
+        //boolean solutionExists = test.assignPropertiesToInhabitants();
+        //if (!solutionExists) {
+        //    System.out.println("Couldn't find a solution");
+        //}
 
         ZebraPuzzle test2 = new ZebraPuzzle();
-        boolean correctSolutionExists = test.assignCorrectProperties();
+        test2.assignCorrectProperties(inhabitantTest);
+        boolean correctSolutionExists = test2.testPermutation(2, inhabitantTest);
         if (correctSolutionExists) {
             System.out.println("Solution!");
+        } else {
+            System.out.println("So sad!");
         }
     }
     
 
     public class Inhabitant {
-        String nationality;
-        String pet;
-        String drink;
-        String hobby;
-        String houseColor;
+        int nationality;
+        int pet;
+        int drink;
+        int hobby;
+        int houseColor;
         int houseNumber;
     }
 
-    public void printInhabitants() {
+    public void printInhabitants(Inhabitant[] inhabitants) {
         for (Inhabitant inhabitant : inhabitants) {
             System.out.println("House nr " + inhabitant.houseNumber);
             System.out.println(inhabitant.nationality);
@@ -104,100 +122,84 @@ class ZebraPuzzle {
 //
 //  Method that creates the correct solution for testing
 //
-    public boolean assignCorrectProperties() {
+    public Inhabitant[] assignCorrectProperties(Inhabitant[] inhabitants) {
         for (int i = 0; i < 5; i++) {
-            inhabitantTest[i] = new Inhabitant();
-            inhabitantTest[i].houseNumber = i+1;
+            inhabitants[i] = new Inhabitant();
+            inhabitants[i].houseNumber = i+1;
         }
 
-        inhabitantTest[0].drink = "Water";
-        inhabitantTest[0].hobby = "Painting";
-        inhabitantTest[0].houseColor = "Yellow";
-        inhabitantTest[0].nationality = "Norwegian";
-        inhabitantTest[0].pet = "Fox";
+        inhabitants[0].drink = 3; //"Water";
+        inhabitants[0].hobby = 1; //"Painting";
+        inhabitants[0].houseColor = 1; //"Yellow";
+        inhabitants[0].nationality = 4; //"Norwegian";
+        inhabitants[0].pet = 3; //"Fox";
 
-        inhabitantTest[1].drink = "Tea";
-        inhabitantTest[1].hobby = "Reading";
-        inhabitantTest[1].houseColor = "Blue";
-        inhabitantTest[1].nationality = "Ukrainian";
-        inhabitantTest[1].pet = "Horse";
+        inhabitants[1].drink = 1; //"Tea";
+        inhabitants[1].hobby = 2; //"Reading";
+        inhabitants[1].houseColor = 4; //"Blue";
+        inhabitants[1].nationality = 2; //"Ukrainian";
+        inhabitants[1].pet = 1; //"Horse";
 
-        inhabitantTest[2].drink = "Milk";
-        inhabitantTest[2].hobby = "Dancing";
-        inhabitantTest[2].houseColor = "Red";
-        inhabitantTest[2].nationality = "Englishman";
-        inhabitantTest[2].pet = "Snail";
+        inhabitants[2].drink = 4; //"Milk";
+        inhabitants[2].hobby = 0; //"Dancing";
+        inhabitants[2].houseColor = 0; //"Red";
+        inhabitants[2].nationality = 0; //"Englishman";
+        inhabitants[2].pet = 2; //"Snail";
 
-        inhabitantTest[3].drink = "Orange Juice";
-        inhabitantTest[3].hobby = "Football";
-        inhabitantTest[3].houseColor = "Ivory";
-        inhabitantTest[3].nationality = "Spaniard";
-        inhabitantTest[3].pet = "Dog";
+        inhabitants[3].drink = 2; //"Orange Juice";
+        inhabitants[3].hobby = 3; //"Football";
+        inhabitants[3].houseColor = 2; //"Ivory";
+        inhabitants[3].nationality = 1; //"Spaniard";
+        inhabitants[3].pet = 0; //"Dog";
 
-        inhabitantTest[4].drink = "Coffee";
-        inhabitantTest[4].hobby = "Chess";
-        inhabitantTest[4].houseColor = "Green";
-        inhabitantTest[4].nationality = "Japanese";
-        inhabitantTest[4].pet = "Zebra";
+        inhabitants[4].drink = 0; //"Coffee";
+        inhabitants[4].hobby = 4; //"Chess";
+        inhabitants[4].houseColor = 3; //"Green";
+        inhabitants[4].nationality = 3; //"Japanese";
+        inhabitants[4].pet = 4; //"Zebra";
 
-        return true;
+        return inhabitants;
     }
 
 //
 //  Methods to create inhabitant data based on permutations
 //
     // Makes 5 inhabitant objects, assigns known and generated properties to them
-    public boolean assignPropertiesToInhabitants() {
+    public Inhabitant[] assignPropertiesToInhabitants(Inhabitant[] inhabitants) {
         for (int i = 0; i < 5; i++) {
             inhabitants[i] = new Inhabitant();
             inhabitants[i].houseNumber = i+1;
         }
 
-        inhabitants[2].drink = "Milk"; // The person in the middle house drinks milk
-        inhabitants[0].nationality = "Norwegian"; // The Norwegian lives in the first house.
-        inhabitants[1].houseColor = "Blue"; // The Norwegian lives next to the blue house.
+        inhabitants[2].drink       = revDrinkMap.get("Milk"); // The person in the middle house drinks milk
+        inhabitants[0].nationality = revNationMap.get("Norwegian"); // The Norwegian lives in the first house.
+        inhabitants[1].houseColor  = revColorMap.get("Blue"); // The Norwegian lives next to the blue house.
         
         // apply permutation recursively to all properties
         for (Integer[] drink : perm4) {
-            inhabitants[0].drink = drinkMap.get(drink[0]);
-            inhabitants[1].drink = drinkMap.get(drink[1]);
-            //inhabitants[2].drink = "Milk"; // The person in the middle house drinks milk
-            inhabitants[3].drink = drinkMap.get(drink[2]);
-            inhabitants[4].drink = drinkMap.get(drink[3]);
+            assignAttribute(drink, "drink", inhabitants);
+
             for (Integer[] nation : perm4) {
-                //inhabitants[0].nationality = "Norwegian"; // The Norwegian lives in the first house.
-                inhabitants[1].nationality = nationMap.get(nation[0]);
-                inhabitants[2].nationality = nationMap.get(nation[1]);
-                inhabitants[3].nationality = nationMap.get(nation[2]);
-                inhabitants[4].nationality = nationMap.get(nation[3]);
+                assignAttribute(nation, "nationality", inhabitants);
+
                 for (Integer[] color : perm4) {
-                    inhabitants[0].houseColor = colorMap.get(color[0]);
-                    //inhabitants[1].houseColor = "Blue"; // The Norwegian lives next to the blue house.
-                    inhabitants[2].houseColor = colorMap.get(color[1]);
-                    inhabitants[3].houseColor = colorMap.get(color[2]);
-                    inhabitants[4].houseColor = colorMap.get(color[3]);
-                    if (validateDrinkNationColor(inhabitants)) {
-                        printInhabitants();
+                    assignAttribute(color, "color", inhabitants);
+
+                    if (testPermutation(1, inhabitants)) {
+                        printInhabitants(inhabitants);
                         System.out.println("Found a possible solution!");
                         for (Integer[] pet : perm5) {
-                            inhabitants[0].pet = petMap.get(pet[0]);
-                            inhabitants[1].pet = petMap.get(pet[1]);
-                            inhabitants[2].pet = petMap.get(pet[2]);
-                            inhabitants[3].pet = petMap.get(pet[3]);
-                            inhabitants[4].pet = petMap.get(pet[4]);
+                            assignAttribute(pet, "pet", inhabitants);
                             for (Integer[] hobby : perm5) {
-                                inhabitants[0].hobby = hobbyMap.get(hobby[0]);
-                                inhabitants[1].hobby = hobbyMap.get(hobby[1]);
-                                inhabitants[2].hobby = hobbyMap.get(hobby[2]);
-                                inhabitants[3].hobby = hobbyMap.get(hobby[3]);
-                                inhabitants[4].hobby = hobbyMap.get(hobby[4]);
-                                printInhabitants();
+                                assignAttribute(hobby, "hobby", inhabitants);
+                                printInhabitants(inhabitants);
                                 
-                                if (validateConfiguration()) {
+                                if (testPermutation(2, inhabitants)) {
                                     System.out.println("Solution found!");
                                     //printInhabitants();
-                                    return true;
-                                }
+                                    return inhabitants;
+                                } 
+                                System.out.println("Wrong solution");
                             }
                         }
                     }
@@ -206,7 +208,56 @@ class ZebraPuzzle {
             }
 
         }
-        return false;
+        return inhabitants;
+    }
+
+
+    void assignAttribute(Integer[] array, String attribute, Inhabitant[] inhabitants) {
+        switch (attribute) {
+            case "drink":
+                inhabitants[0].drink = array[0];
+                inhabitants[1].drink = array[1];
+                //inhabitants[2].drink = "Milk"; // The person in the middle house drinks milk
+                inhabitants[3].drink = array[2];
+                inhabitants[4].drink = array[3];
+                break;
+
+            case "color":
+                inhabitants[0].houseColor = array[0];
+                //inhabitants[1].houseColor = "Blue"; // The Norwegian lives next to the blue house.
+                inhabitants[2].houseColor = array[1];
+                inhabitants[3].houseColor = array[2];
+                inhabitants[4].houseColor = array[3];
+                break;
+
+            case "nationality":
+                //inhabitants[0].nationality = "Norwegian"; // The Norwegian lives in the first house.
+                inhabitants[1].nationality = array[0];
+                inhabitants[2].nationality = array[1];
+                inhabitants[3].nationality = array[2];
+                inhabitants[4].nationality = array[3];
+                break;
+
+            case "pet":                
+                inhabitants[0].pet = array[0];
+                inhabitants[1].pet = array[1];
+                inhabitants[2].pet = array[2];
+                inhabitants[3].pet = array[3];
+                inhabitants[4].pet = array[4];
+                break;
+
+            case "hobby":                
+                inhabitants[0].hobby = array[0];
+                inhabitants[1].hobby = array[1];
+                inhabitants[2].hobby = array[2];
+                inhabitants[3].hobby = array[3];
+                inhabitants[4].hobby = array[4];
+                break;
+        
+            default:
+                break;
+        }
+        
     }
 
 //
@@ -238,179 +289,142 @@ class ZebraPuzzle {
     }
 
 
-    boolean validateDrinkNationColor(Inhabitant[] inhabitants) {
-        for (Inhabitant inhabitant : inhabitants){
-            try {
-                // The Englishman lives in the red house.
-                if (inhabitant.nationality == "Englishman") {
-                    if (inhabitant.houseColor != "Red") {
-                        //System.out.println("The Englishman lives in the red house.");
-                        return false;
-                    }
-                }
-                // The person in the green house drinks coffee
-                if (inhabitant.houseColor == "Green") {
-                    if (inhabitant.drink != "Coffee") {
-                        //System.out.println("The person in the green house drinks coffee");
-                        return false;
-                    }
-                    // The first house cannot be green, see explanatio below
-                    if (inhabitant.houseNumber == 1) {
-                        //System.out.println("The first house cannot be green");
-                        return false;
-                    }
-                    // The green house is immediately to the right of the ivory house.
-                    try {
-                        if (inhabitants[inhabitant.houseNumber-2].houseColor != "Ivory") {
-                            //System.out.println("The green house is not immediately to the right of the ivory house.");
-                            return false;
-                        }
-                    } catch (Exception e) {
-                        System.err.println(e);
-                        return false;
-                    }    
-                }
-                // The Ukrainian drinks tea.
-                if (inhabitant.nationality == "Ukrainian") {
-                    if (inhabitant.houseColor != "Tea") {
-                        //System.out.println("The Ukrainian drinks tea.");
-                        return false;
-                    }
-                }
-                // The Norwegian lives in the first house.
-                // The Norwegian lives next to the blue house.
-                // => second house must be blue
-                // The green house is immediately to the right of the ivory house.
-                // => first house cannot be green (because first house is next to blue house and has only one neighbor) 
-                // or blue (because the second house is blue).
-                if (inhabitant.nationality == "Norwegian") {
-                    if (inhabitant.houseNumber != 1 || inhabitant.houseColor == "Green" ) { // || inhabitant.houseColor == "Blue"
-                        //System.out.println("Wrong color house");
-                        return false;
-                    }
-                    // try {
-                    //     if (!(inhabitants[inhabitant.houseNumber+2].houseColor == "Blue")) {
-                    //         System.out.println("Wrong color neighbouring house");
-                    //         return false;
-                    //     }
-                    // } catch (Exception e) {
-                    //     System.err.println(e);
-                    //     return false;
-                    // }
-                }
-            } catch (Exception e) {
-                System.err.println(e + " property might be empty");
-                return false;
-            }
-        }
-        System.out.println("Found a possible solution!");
-        return true;
-    } 
-
-
 //
-//  Method to check if a permutation has the correct solution
+//  Method to test if a permutation has the correct solution
 //
-    boolean validateConfiguration() {
+    boolean testPermutation(int scope, Inhabitant[] inhabitants) {
         for (Inhabitant inhabitant : inhabitants) {
             try {
-                // The Englishman lives in the red house.
-                if (inhabitant.nationality == "Englishman") {
-                    if (inhabitant.houseColor != "Red") {
-                        return false;
+                // nationality, color, drink
+                if (scope >= 1) {
+
+                    // The Englishman lives in the red house.
+                    if (inhabitant.nationality == revNationMap.get("Englishman")) {
+                        if (inhabitant.houseColor != revColorMap.get("Red")) {
+                            System.out.println("The Englishman lives in the red house.");
+                            return false;
+                        }
                     }
-                }
-                // The Spaniard owns the dog.
-                if (inhabitant.nationality == "Spaniard") {
-                    if (inhabitant.pet != "Dog") {
-                        return false;
+
+                    // The person in the green house drinks coffee
+                    if (inhabitant.houseColor == revColorMap.get("Green")) {
+                        if (inhabitant.drink != revDrinkMap.get("Coffee")) {
+                            System.out.println("The person in the green house drinks coffee");
+                            return false;
+                        }
+                        // The first house cannot be green, see explanatio below
+                        if (inhabitant.houseNumber == 1) {
+                            System.out.println("The first house cannot be green, see explanatio below");
+                            return false;
+                        }
+                        // The green house is immediately to the right of the ivory house.
+                        try {
+                            if (inhabitants[inhabitant.houseNumber-2].houseColor != revColorMap.get("Ivory")) {
+                                System.out.println("The green house is immediately to the right of the ivory house.");
+                                return false;
+                            }
+                        } catch (Exception e) {
+                            System.err.println("Exception within: The person in the green house drinks coffee" + e);
+                            return false;
+                        }
+                        
                     }
-                }
-                // The person in the green house drinks coffee
-                if (inhabitant.houseColor == "Green") {
-                    if (inhabitant.drink != "Coffee") {
-                        return false;
+
+                    // The Ukrainian drinks tea.
+                    if (inhabitant.nationality == revNationMap.get("Ukrainian")) {
+                        if (inhabitant.drink != revDrinkMap.get("Tea")) {
+                            System.out.println("The Ukrainian drinks tea.");
+                            return false;
+                        }
                     }
-                    // The first house cannot be green, see explanatio below
-                    if (inhabitant.houseNumber == 1) {
-                        return false;
-                    }
+
+                    // The Norwegian lives in the first house.
+                    // The Norwegian lives next to the blue house.
+                    // => second house must be blue
                     // The green house is immediately to the right of the ivory house.
-                    try {
-                        if (inhabitants[inhabitant.houseNumber-2].houseColor != "Ivory") {
+                    // => first house cannot be green (because first house is next to blue house and has only one neighbor) 
+                    // or blue (because the second house is blue).
+                    if (inhabitant.nationality == revNationMap.get("Norwegian")) {
+                        if (inhabitant.houseNumber != 1 || inhabitant.houseColor == revColorMap.get("Green") || inhabitant.houseColor == revColorMap.get("Blue")) {
+                            System.out.println("The Norwegian lives in the first house. 1. if");
                             return false;
                         }
-                    } catch (Exception e) {
-                        return false;
-                    }
-                    
-                }
-                // The Ukrainian drinks tea.
-                if (inhabitant.nationality == "Ukrainian") {
-                    if (inhabitant.houseColor != "Tea") {
-                        return false;
-                    }
-                }
-                // The snail owner likes to go dancing.
-                if (inhabitant.pet == "Snail") {
-                    if (inhabitant.hobby != "Dancing") {
-                        return false;
+                       try {
+                           if (!(inhabitants[inhabitant.houseNumber].houseColor == revColorMap.get("Blue"))) {
+                               System.out.println("The Norwegian lives in the first house. 2. if");
+                               return false;
+                           }
+                       } catch (Exception e) {
+                           System.err.println("Exception occurred within: The Norwegian lives in the first house." + e);
+                           return false;
+                       }
                     }
                 }
-                // The person in the yellow house is a painter.
-                if (inhabitant.houseColor == "Yellow") {
-                    if (inhabitant.hobby != "Painting") {
-                        return false;
-                    }
-                    // The painter's house is next to the house with the horse.
-                    try {
-                        if (!(inhabitants[inhabitant.houseNumber-2].pet == "Horse" || inhabitants[inhabitant.houseNumber+2].pet == "Horse")) {
+                if (scope >= 2) {
+
+                    // The Spaniard owns the dog.
+                    if (inhabitant.nationality == revNationMap.get("Spaniard")) {
+                        if (inhabitant.pet != revPetMap.get("Dog")) {
+                            System.out.println("The Spaniard owns the dog.");
                             return false;
                         }
-                    } catch (Exception e) {
-                        return false;
                     }
-                }
-                // The person who enjoys reading lives in the house next to the person with the fox.
-                if (inhabitant.hobby == "Reading") {
-                    try {
-                        if (!(inhabitants[inhabitant.houseNumber-2].pet == "Fox" || inhabitants[inhabitant.houseNumber+2].pet == "Fox")) {
+
+                    // The snail owner likes to go dancing.
+                    if (inhabitant.pet == revPetMap.get("Snail")) {
+                        if (inhabitant.hobby != revHobbyMap.get("Dancing")) {
+                            System.out.println("The snail owner likes to go dancing.");
                             return false;
                         }
-                    } catch (Exception e) {
-                        return false;
                     }
-                }
-                // The person who plays football drinks orange juice.
-                if (inhabitant.hobby == "Football") {
-                    if (inhabitant.drink != "Orange Juice") {
-                        return false;
-                    }
-                }
-                // The Japanese person plays chess.
-                if (inhabitant.nationality == "Japanese") {
-                    if (inhabitant.hobby != "Chess") {
-                        return false;
-                    }
-                }
-                // The Norwegian lives in the first house.
-                // The Norwegian lives next to the blue house.
-                // => second house must be blue
-                // The green house is immediately to the right of the ivory house.
-                // => first house cannot be green (because first house is next to blue house and has only one neighbor) 
-                // or blue (because the second house is blue).
-                if (inhabitant.nationality == "Norwegian") {
-                    if (inhabitant.houseNumber != 1 || inhabitant.houseColor == "Green" || inhabitant.houseColor == "Blue") {
-                        return false;
-                    }
-                    try {
-                        if (!(inhabitants[inhabitant.houseNumber+2].houseColor == "Blue")) {
+                    // The person in the yellow house is a painter.
+                    if (inhabitant.houseColor == revColorMap.get("Yellow")) {
+                        if (inhabitant.hobby != revHobbyMap.get("Painting")) {
+                            System.out.println("The person in the yellow house is a painter.");
                             return false;
                         }
-                    } catch (Exception e) {
-                        return false;
+                        // The painter's house is next to the house with the horse.
+                        try {
+                            if (!(inhabitants[inhabitant.houseNumber-2].pet == revPetMap.get("Horse") )) {
+                                System.out.println("The painter's house is next to the house with the horse.");
+                                return false;
+                            }
+                            if (!(inhabitants[inhabitant.houseNumber].pet == revPetMap.get("Horse"))) {
+                                System.out.println("The painter's house is next to the house with the horse.");
+                                return false;
+                            }
+                        } catch (Exception e) {
+                            System.err.println("Exception occurred within: The painter's house is next to the house with the horse. " + e);
+                        }
+                    }
+                    // The person who enjoys reading lives in the house next to the person with the fox.
+                    if (inhabitant.hobby == revHobbyMap.get("Reading")) {
+                        try {
+                            if (!(inhabitants[inhabitant.houseNumber-2].pet == revPetMap.get("Fox") || inhabitants[inhabitant.houseNumber+2].pet == revPetMap.get("Fox"))) {
+                                System.out.println("The person who enjoys reading lives in the house next to the person with the fox.");
+                                return false;
+                            }
+                        } catch (Exception e) {
+                            System.err.println("Exception occurred within: The person who enjoys reading lives in the house next to the person with the fox. " + e);
+                            return false;
+                        }
+                    }
+                    // The person who plays football drinks orange juice.
+                    if (inhabitant.hobby == revHobbyMap.get("Football")) {
+                        if (inhabitant.drink != revDrinkMap.get("Orange Juice")) {
+                            System.out.println("The person who plays football drinks orange juice.");
+                            return false;
+                        }
+                    }
+                    // The Japanese person plays chess.
+                    if (inhabitant.nationality == revNationMap.get("Japanese")) {
+                        if (inhabitant.hobby != revHobbyMap.get("Chess")) {
+                            System.out.println("The Japanese person plays chess.");
+                            return false;
+                        }
                     }
                 }
+
             } catch (Exception e) {
                 System.err.println(e + " property might be empty");
             }
@@ -423,8 +437,8 @@ class ZebraPuzzle {
 //  Getter methods used by tests
 //  
     String getWaterDrinker() {
-        assignPropertiesToInhabitants();
-        printInhabitants();
+        assignPropertiesToInhabitants(inhabitants);
+        printInhabitants(inhabitants);
         String waterDrinker = "Norwegian";
         
         return waterDrinker;
