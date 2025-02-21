@@ -7,30 +7,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.IntStream;
 
-/* Puzzle
-The following 15 statements are all known to be true:
-
-There are five houses.//
-The Englishman lives in the red house.
-The Spaniard owns the dog.
-The person in the green house drinks coffee.
-The Ukrainian drinks tea.
-The green house is immediately to the right of the ivory house.
-The snail owner likes to go dancing.
-The person in the yellow house is a painter.
-The person in the middle house drinks milk.//
-The Norwegian lives in the first house.//
-The person who enjoys reading lives in the house next to the person with the fox.
-The painter's house is next to the house with the horse.
-The person who plays football drinks orange juice.
-The Japanese person plays chess.
-The Norwegian lives next to the blue house.
-
-Additionally, each of the five houses is painted a different color, 
-and their inhabitants are of different national extractions, 
-own different pets, drink different beverages 
-and engage in different hobbies. */
-
 class ZebraPuzzle {
     static final String[] drinks = {"Coffee", "Tea", "Orange Juice", "Water", "Milk"}; // "Milk"
     static final String[] nationalities = {"Englishman", "Spaniard", "Ukrainian", "Japanese", "Norwegian"}; // "Norwegian"
@@ -77,18 +53,19 @@ class ZebraPuzzle {
         IntStream.range(0, 5).forEach(index ->  revHobbyMap.put(hobbies[index],       index));
     }
 
+static {
+    ZebraPuzzle puzzle = new ZebraPuzzle();
+    inhabitants = puzzle.assignPropertiesToInhabitants(inhabitants);
 
+}
 
     public static void main(String[] args) {
-        ZebraPuzzle test = new ZebraPuzzle();
+        //ZebraPuzzle test = new ZebraPuzzle();
         //perm5.forEach(array -> System.out.println(Arrays.toString(array)));
 
-        System.out.println();
-        test.assignPropertiesToInhabitants(inhabitants);
-        boolean solutionExists = test.testPermutation(2, inhabitants);
-        if (!solutionExists) {
-            System.out.println("Couldn't find a solution");
-        }
+        //test.assignPropertiesToInhabitants(inhabitants);
+        //boolean solutionExists = test.testPermutation(2, inhabitants);
+
 
         //ZebraPuzzle test2 = new ZebraPuzzle();
         //test2.assignCorrectProperties(inhabitantTest);
@@ -113,11 +90,11 @@ class ZebraPuzzle {
     public void printInhabitants(Inhabitant[] inhabitants) {
         for (Inhabitant inhabitant : inhabitants) {
             System.out.println("House nr " + inhabitant.houseNumber);
-            System.out.println(inhabitant.nationality);
-            System.out.println(inhabitant.drink);
-            System.out.println(inhabitant.houseColor);
-            System.out.println(inhabitant.hobby);
-            System.out.println(inhabitant.pet);
+            System.out.println(nationMap.get(inhabitant.nationality));
+            System.out.println(drinkMap.get(inhabitant.drink));
+            System.out.println(colorMap.get(inhabitant.houseColor));
+            System.out.println(hobbyMap.get(inhabitant.hobby));
+            System.out.println(petMap.get(inhabitant.pet));
         }
     }
 
@@ -188,17 +165,13 @@ class ZebraPuzzle {
                     assignAttribute(color, "color", inhabitants);
 
                     if (testPermutation(1, inhabitants)) {
-                        printInhabitants(inhabitants);
-                        System.out.println("Found a possible solution!");
                         for (Integer[] pet : perm5) {
                             assignAttribute(pet, "pet", inhabitants);
                             for (Integer[] hobby : perm5) {
                                 assignAttribute(hobby, "hobby", inhabitants);
-                                printInhabitants(inhabitants);
                                 
                                 if (testPermutation(2, inhabitants)) {
                                     System.out.println("Solution found!");
-                                    //printInhabitants();
                                     return inhabitants;
                                 } 
                                 System.out.println("Wrong solution");
@@ -417,8 +390,21 @@ class ZebraPuzzle {
                     }
                     // The Japanese person plays chess.
                     if (inhabitant.nationality == revNationMap.get("Japanese")) {
+                        //The Japanese person plays chess.
                         if (inhabitant.hobby != revHobbyMap.get("Chess")) {
                             System.out.println("The Japanese person plays chess.");
+                            return false;
+                        }
+                        // The Japanese person owns a zebra
+                        if (inhabitant.pet != revPetMap.get("Zebra")) {
+                            System.out.println("The Japanese person owns a zebra");
+                            return false;
+                        }
+                    }
+                    // The Norwegian drinks water
+                    if (inhabitant.nationality == revNationMap.get("Norwegian")){
+                        if (inhabitant.drink != revDrinkMap.get("Water")) {
+                            System.out.println("The Norwegian drinks water");
                             return false;
                         }
                     }
@@ -428,6 +414,7 @@ class ZebraPuzzle {
                 System.err.println(e + " property might be empty");
             }
         }
+        printInhabitants(inhabitants);
         return true;
     }
 
@@ -436,18 +423,20 @@ class ZebraPuzzle {
 //  Getter methods used by tests
 //  
     String getWaterDrinker() {
-        assignPropertiesToInhabitants(inhabitants);
-        printInhabitants(inhabitants);
-        String waterDrinker = "Norwegian";
-        
-        return waterDrinker;
-        //throw new UnsupportedOperationException("Please implement the ZebraPuzzle.getWaterDrinker() method.");
+        for (Inhabitant inhabitant : inhabitants) {
+            if (inhabitant.drink == revDrinkMap.get("Water")) {
+                return nationMap.get(inhabitant.nationality);
+            }
+        }
+        return "waterDrinker";
     }
 
     String getZebraOwner() {
-        String zebraOwner = "Japanese";
-        
-        return zebraOwner;
-        //throw new UnsupportedOperationException("Please implement the ZebraPuzzle.getZebraOwner() method.");
+        for (Inhabitant inhabitant : inhabitants) {
+            if (inhabitant.pet == revPetMap.get("Zebra")) {
+                return nationMap.get(inhabitant.nationality);
+            }
+        }
+        return "zebraOwner";
     }
 }
