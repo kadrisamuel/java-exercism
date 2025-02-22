@@ -132,10 +132,6 @@ class ZebraPuzzle {
         inhabitants[4].nationality = revNationMap.get("Japanese");
         inhabitants[4].pet = revPetMap.get("Zebra"); 
 
-        if (testPermutation(2, inhabitants)) {
-            System.out.println("Solution found!");
-        }
-
         return inhabitants;
     }
 
