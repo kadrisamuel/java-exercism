@@ -168,10 +168,10 @@ class ZebraPuzzle {
                                 assignAttribute(hobby, "hobby", inhabitants);
                                 
                                 if (testPermutation(2, inhabitants)) {
-                                    System.out.println("Solution found!");
+                                    //System.out.println("Solution found!");
                                     return inhabitants;
                                 } 
-                                System.out.println("Wrong solution");
+                                //System.out.println("Wrong solution");
                             }
                         }
                         
@@ -273,7 +273,7 @@ class ZebraPuzzle {
                 // The Englishman lives in the red house.
                 if (inhabitant.nationality == revNationMap.get("Englishman")) {
                     if (inhabitant.houseColor != revColorMap.get("Red")) {
-                        System.out.println("The Englishman lives in the red house.");
+                        //System.out.println("The Englishman lives in the red house.");
                         return false;
                     }
                 }
@@ -281,17 +281,17 @@ class ZebraPuzzle {
                 // The person in the green house drinks coffee
                 if (inhabitant.houseColor == revColorMap.get("Green")) {
                     if (inhabitant.drink != revDrinkMap.get("Coffee")) {
-                        System.out.println("The person in the green house drinks coffee");
+                        //System.out.println("The person in the green house drinks coffee");
                         return false;
                     }
                     // The first house cannot be green, see explanatio below
                     if (inhabitant.houseNumber == 1) {
-                        System.out.println("The first house cannot be green");
+                        //System.out.println("The first house cannot be green");
                         return false;
                     }
                     // The green house is immediately to the right of the ivory house.
                     if (inhabitant.houseNumber > 1 && inhabitants[inhabitant.houseNumber-2].houseColor != revColorMap.get("Ivory")) {
-                        System.out.println("The green house is immediately to the right of the ivory house.");
+                        //System.out.println("The green house is immediately to the right of the ivory house.");
                         return false;
                     }   
                 }
@@ -299,7 +299,7 @@ class ZebraPuzzle {
                 // The Ukrainian drinks tea.
                 if (inhabitant.nationality == revNationMap.get("Ukrainian")) {
                     if (inhabitant.drink != revDrinkMap.get("Tea")) {
-                        System.out.println("The Ukrainian drinks tea.");
+                        //System.out.println("The Ukrainian drinks tea.");
                         return false;
                     }
                 }
@@ -312,11 +312,11 @@ class ZebraPuzzle {
                 // or blue (because the second house is blue).
                 if (inhabitant.nationality == revNationMap.get("Norwegian")) {
                     if (inhabitant.houseNumber != 1 || inhabitant.houseColor == revColorMap.get("Green") || inhabitant.houseColor == revColorMap.get("Blue")) {
-                        System.out.println("The Norwegian lives in the first house. 1. if");
+                        //System.out.println("The Norwegian lives in the first house. 1. if");
                         return false;
                     }
                     if (inhabitant.houseNumber < 5 && !(inhabitants[inhabitant.houseNumber].houseColor == revColorMap.get("Blue"))) {
-                        System.out.println("The Norwegian lives in the first house. 2. if");
+                        //System.out.println("The Norwegian lives in the first house. 2. if");
                         return false;
                     }
                 }
@@ -327,7 +327,7 @@ class ZebraPuzzle {
                 // The Spaniard owns the dog.
                 if (inhabitant.nationality == revNationMap.get("Spaniard")) {
                     if (inhabitant.pet != revPetMap.get("Dog")) {
-                        System.out.println("The Spaniard owns the dog.");
+                        //System.out.println("The Spaniard owns the dog.");
                         return false;
                     }
                 }
@@ -335,7 +335,7 @@ class ZebraPuzzle {
                 // The snail owner likes to go dancing.
                 if (inhabitant.pet == revPetMap.get("Snail")) {
                     if (inhabitant.hobby != revHobbyMap.get("Dancing")) {
-                        System.out.println("The snail owner likes to go dancing.");
+                        //System.out.println("The snail owner likes to go dancing.");
                         return false;
                     }
                 }
@@ -343,12 +343,12 @@ class ZebraPuzzle {
                 // The person in the yellow house is a painter.
                 if (inhabitant.houseColor == revColorMap.get("Yellow")) {
                     if (inhabitant.hobby != revHobbyMap.get("Painting")) {
-                        System.out.println("The person in the yellow house is a painter.");
+                        //System.out.println("The person in the yellow house is a painter.");
                         return false;
                     }
                     // The painter's house is next to the house with the horse.
                     if ((inhabitant.houseNumber > 1 && (inhabitants[inhabitant.houseNumber-2].pet != revPetMap.get("Horse"))) && (inhabitant.houseNumber < 5 && (inhabitants[inhabitant.houseNumber].pet != revPetMap.get("Horse")))) {
-                        System.out.println("The painter's house is next to the house with the horse.");
+                        //System.out.println("The painter's house is next to the house with the horse.");
                         return false;
                     }
                 }
@@ -356,7 +356,7 @@ class ZebraPuzzle {
                 // The person who enjoys reading lives in the house next to the person with the fox.
                 if (inhabitant.hobby == revHobbyMap.get("Reading")) {
                     if ((inhabitant.houseNumber > 1 && (inhabitants[inhabitant.houseNumber-2].pet != revPetMap.get("Fox"))) && (inhabitant.houseNumber < 5 && (inhabitants[inhabitant.houseNumber].pet != revPetMap.get("Fox")))) {
-                        System.out.println("The person who enjoys reading lives in the house next to the person with the fox.");
+                        //System.out.println("The person who enjoys reading lives in the house next to the person with the fox.");
                         return false;
                     }
                 }
@@ -364,7 +364,7 @@ class ZebraPuzzle {
                 // The person who plays football drinks orange juice.
                 if (inhabitant.hobby == revHobbyMap.get("Football")) {
                     if (inhabitant.drink != revDrinkMap.get("Orange Juice")) {
-                        System.out.println("The person who plays football drinks orange juice.");
+                        //System.out.println("The person who plays football drinks orange juice.");
                         return false;
                     }
                 }
@@ -373,12 +373,12 @@ class ZebraPuzzle {
                 if (inhabitant.nationality == revNationMap.get("Japanese")) {
                     //The Japanese person plays chess.
                     if (inhabitant.hobby != revHobbyMap.get("Chess")) {
-                        System.out.println("The Japanese person plays chess.");
+                        //System.out.println("The Japanese person plays chess.");
                         return false;
                     }
                     // The Japanese person owns a zebra
                     if (inhabitant.pet != revPetMap.get("Zebra")) {
-                        System.out.println("The Japanese person owns a zebra");
+                        //System.out.println("The Japanese person owns a zebra");
                         return false;
                     }
                 }
@@ -386,14 +386,14 @@ class ZebraPuzzle {
                 // The Norwegian drinks water
                 if (inhabitant.nationality == revNationMap.get("Norwegian")){
                     if (inhabitant.drink != revDrinkMap.get("Water")) {
-                        System.out.println("The Norwegian drinks water");
+                        //System.out.println("The Norwegian drinks water");
                         return false;
                     }
                 }
             }
         }
 
-        printInhabitants(inhabitants);
+        //printInhabitants(inhabitants);
         return true;
     }
 
