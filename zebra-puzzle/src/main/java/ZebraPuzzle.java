@@ -25,8 +25,8 @@ class ZebraPuzzle {
     static final Integer[] fourIndices = {0, 1, 2, 3};
     static final Integer[] fiveIndices = {0, 1, 2, 3, 4};
 
-    static Inhabitant[] inhabitants = new Inhabitant[5];
-    static Inhabitant[] inhabitantTest = new Inhabitant[5];
+    static Inhabitant[] inhabArray = new Inhabitant[5];
+    static Inhabitant[] inhabArrayTest = new Inhabitant[5];
 
     static {
         perm4 = permutationGen(fourIndices);
@@ -48,8 +48,8 @@ class ZebraPuzzle {
     }
 
     static {
-        ZebraPuzzle puzzle = new ZebraPuzzle();
-        inhabitants = puzzle.assignPropertiesToInhabitants(inhabitants);
+        //ZebraPuzzle puzzle = new ZebraPuzzle();
+        //inhabitants = puzzle.assignPropertiesToInhabitants(inhabitants);
     }
 
     public static void main(String[] args) {
@@ -60,14 +60,14 @@ class ZebraPuzzle {
         //boolean solutionExists = test.testPermutation(2, inhabitants);
 
 
-        //ZebraPuzzle test2 = new ZebraPuzzle();
-        //test2.assignCorrectProperties(inhabitantTest);
-        //boolean correctSolutionExists = test2.testPermutation(2, inhabitantTest);
-        //if (correctSolutionExists) {
-        //    System.out.println("Solution!");
-        //} else {
-        //    System.out.println("So sad!");
-        //}
+        ZebraPuzzle test2 = new ZebraPuzzle();
+        test2.assignCorrectProperties(inhabArrayTest);
+        boolean correctSolutionExists = test2.testPermutation(2, inhabArrayTest);
+        if (correctSolutionExists) {
+            System.out.println("Solution!");
+        } else {
+            System.out.println("So sad!");
+        }
     }
     
 
@@ -352,13 +352,7 @@ class ZebraPuzzle {
                         // The painter's house is next to the house with the horse.
                         try {
                            
-                            if (inhabitant.houseNumber > 1 && !(inhabitants[inhabitant.houseNumber-2].pet == revPetMap.get("Horse") )) {
-                                System.out.println("The painter's house is next to the house with the horse.");
-                                return false;
-                            }
-                        
-                        
-                            if (inhabitant.houseNumber < 5 && !(inhabitants[inhabitant.houseNumber].pet == revPetMap.get("Horse"))) {
+                            if ((inhabitant.houseNumber > 1 && (inhabitants[inhabitant.houseNumber-2].pet != revPetMap.get("Horse"))) && (inhabitant.houseNumber < 5 && (inhabitants[inhabitant.houseNumber].pet != revPetMap.get("Horse")))) {
                                 System.out.println("The painter's house is next to the house with the horse.");
                                 return false;
                             }
@@ -369,16 +363,11 @@ class ZebraPuzzle {
                     }
                     // The person who enjoys reading lives in the house next to the person with the fox.
                     if (inhabitant.hobby == revHobbyMap.get("Reading")) {
+                        printInhabitants(inhabitants);
                         try {
                             
-                            if (inhabitant.houseNumber > 1 && !(inhabitants[inhabitant.houseNumber-2].pet == revPetMap.get("Fox"))) {
-                                System.out.println("The person who enjoys reading lives in the house next to the person with the fox. 1");
-                                return false;
-                            }
-                        
-                            
-                            if (inhabitant.houseNumber < 5 && !(inhabitants[inhabitant.houseNumber].pet == revPetMap.get("Fox"))) {
-                                System.out.println("The person who enjoys reading lives in the house next to the person with the fox. 2");
+                            if ((inhabitant.houseNumber > 1 && (inhabitants[inhabitant.houseNumber-2].pet != revPetMap.get("Fox"))) && (inhabitant.houseNumber < 5 && (inhabitants[inhabitant.houseNumber].pet != revPetMap.get("Fox")))) {
+                                System.out.println("The person who enjoys reading lives in the house next to the person with the fox.");
                                 return false;
                             }
                         
@@ -428,7 +417,7 @@ class ZebraPuzzle {
 //  Getter methods used by tests
 //  
     String getWaterDrinker() {
-        for (Inhabitant inhabitant : inhabitants) {
+        for (Inhabitant inhabitant : inhabArray) {
             if (inhabitant.drink == revDrinkMap.get("Water")) {
                 return nationMap.get(inhabitant.nationality);
             }
@@ -437,7 +426,7 @@ class ZebraPuzzle {
     }
 
     String getZebraOwner() {
-        for (Inhabitant inhabitant : inhabitants) {
+        for (Inhabitant inhabitant : inhabArray) {
             if (inhabitant.pet == revPetMap.get("Zebra")) {
                 return nationMap.get(inhabitant.nationality);
             }
