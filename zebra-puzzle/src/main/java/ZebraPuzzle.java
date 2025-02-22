@@ -1,4 +1,10 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.IntStream;
 
 class ZebraPuzzle {
@@ -49,11 +55,13 @@ class ZebraPuzzle {
 
     static {
         ZebraPuzzle puzzle = new ZebraPuzzle();
-        inhabArray = puzzle.assignPropertiesToInhabitants(inhabArray);
+       // inhabArray = puzzle.assignPropertiesToInhabitants(inhabArray);
+        ZebraPuzzle correct = new ZebraPuzzle();
+        inhabArrayTest = correct.assignCorrectProperties(inhabArrayTest);
     }
 
     public static void main(String[] args) {
-
+        //perm5.forEach(array -> System.out.println(Arrays.toString(array)));
         /* ZebraPuzzle test = new ZebraPuzzle();
         test.assignCorrectProperties(inhabArrayTest);
         boolean correctSolutionExists = test.testPermutation(2, inhabArrayTest);
@@ -94,35 +102,39 @@ class ZebraPuzzle {
             inhabitants[i].houseNumber = i+1;
         }
 
-        inhabitants[0].drink = 3; //"Water";
-        inhabitants[0].hobby = 1; //"Painting";
-        inhabitants[0].houseColor = 1; //"Yellow";
-        inhabitants[0].nationality = 4; //"Norwegian";
-        inhabitants[0].pet = 3; //"Fox";
+        inhabitants[0].drink = revDrinkMap.get("Water");
+        inhabitants[0].hobby = revHobbyMap.get("Painting"); 
+        inhabitants[0].houseColor = revColorMap.get("Yellow"); 
+        inhabitants[0].nationality = revNationMap.get("Norwegian");
+        inhabitants[0].pet = revPetMap.get("Fox");
 
-        inhabitants[1].drink = 1; //"Tea";
-        inhabitants[1].hobby = 2; //"Reading";
-        inhabitants[1].houseColor = 4; //"Blue";
-        inhabitants[1].nationality = 2; //"Ukrainian";
-        inhabitants[1].pet = 1; //"Horse";
+        inhabitants[1].drink = revDrinkMap.get("Tea"); 
+        inhabitants[1].hobby = revHobbyMap.get("Reading"); 
+        inhabitants[1].houseColor = revColorMap.get("Blue");
+        inhabitants[1].nationality = revNationMap.get("Ukrainian"); 
+        inhabitants[1].pet = revPetMap.get("Horse"); 
 
-        inhabitants[2].drink = 4; //"Milk";
-        inhabitants[2].hobby = 0; //"Dancing";
-        inhabitants[2].houseColor = 0; //"Red";
-        inhabitants[2].nationality = 0; //"Englishman";
-        inhabitants[2].pet = 2; //"Snail";
+        inhabitants[2].drink = revDrinkMap.get("Milk"); 
+        inhabitants[2].hobby = revHobbyMap.get("Dancing"); 
+        inhabitants[2].houseColor = revColorMap.get("Red"); 
+        inhabitants[2].nationality = revNationMap.get("Englishman");
+        inhabitants[2].pet = revPetMap.get("Snail"); 
 
-        inhabitants[3].drink = 2; //"Orange Juice";
-        inhabitants[3].hobby = 3; //"Football";
-        inhabitants[3].houseColor = 2; //"Ivory";
-        inhabitants[3].nationality = 1; //"Spaniard";
-        inhabitants[3].pet = 0; //"Dog";
+        inhabitants[3].drink = revDrinkMap.get("Orange Juice"); 
+        inhabitants[3].hobby = revHobbyMap.get("Football"); 
+        inhabitants[3].houseColor = revColorMap.get("Ivory"); 
+        inhabitants[3].nationality = revNationMap.get("Spaniard"); 
+        inhabitants[3].pet = revPetMap.get("Dog"); 
 
-        inhabitants[4].drink = 0; //"Coffee";
-        inhabitants[4].hobby = 4; //"Chess";
-        inhabitants[4].houseColor = 3; //"Green";
-        inhabitants[4].nationality = 3; //"Japanese";
-        inhabitants[4].pet = 4; //"Zebra";
+        inhabitants[4].drink = revDrinkMap.get("Coffee");
+        inhabitants[4].hobby = revHobbyMap.get("Chess"); 
+        inhabitants[4].houseColor = revColorMap.get("Green");
+        inhabitants[4].nationality = revNationMap.get("Japanese");
+        inhabitants[4].pet = revPetMap.get("Zebra"); 
+
+        if (testPermutation(2, inhabitants)) {
+            System.out.println("Solution found!");
+        }
 
         return inhabitants;
     }
