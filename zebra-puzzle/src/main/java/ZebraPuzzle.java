@@ -136,12 +136,8 @@ class ZebraPuzzle {
             inhabitants[i] = new Inhabitant();
             inhabitants[i].houseNumber = i+1;
         }
-
-        inhabitants[2].drink       = revDrinkMap.get("Milk"); // The person in the middle house drinks milk
-        inhabitants[0].nationality = revNationMap.get("Norwegian"); // The Norwegian lives in the first house.
-        inhabitants[1].houseColor  = revColorMap.get("Blue"); // The Norwegian lives next to the blue house.
         
-        // apply permutation recursively to all properties
+        // apply permutations recursively to all properties
         for (Integer[] drink : perm4) {
             assignAttribute(drink, "drink", inhabitants);
 
@@ -151,7 +147,9 @@ class ZebraPuzzle {
                 for (Integer[] color : perm4) {
                     assignAttribute(color, "color", inhabitants);
 
+                    // Continue with the permutation only if the first three attributes pass the tests
                     if (testPermutation(1, inhabitants)) {
+
                         for (Integer[] pet : perm5) {
                             assignAttribute(pet, "pet", inhabitants);
                             for (Integer[] hobby : perm5) {
@@ -164,6 +162,7 @@ class ZebraPuzzle {
                                 System.out.println("Wrong solution");
                             }
                         }
+                        
                     }
 
                 }
@@ -179,21 +178,21 @@ class ZebraPuzzle {
             case "drink":
                 inhabitants[0].drink = array[0];
                 inhabitants[1].drink = array[1];
-                //inhabitants[2].drink = "Milk"; // The person in the middle house drinks milk
+                inhabitants[2].drink = revDrinkMap.get("Milk"); // The person in the middle house drinks milk
                 inhabitants[3].drink = array[2];
                 inhabitants[4].drink = array[3];
                 break;
 
             case "color":
                 inhabitants[0].houseColor = array[0];
-                //inhabitants[1].houseColor = "Blue"; // The Norwegian lives next to the blue house.
+                inhabitants[1].houseColor = revColorMap.get("Blue"); // The Norwegian lives next to the blue house.
                 inhabitants[2].houseColor = array[1];
                 inhabitants[3].houseColor = array[2];
                 inhabitants[4].houseColor = array[3];
                 break;
 
             case "nationality":
-                //inhabitants[0].nationality = "Norwegian"; // The Norwegian lives in the first house.
+                inhabitants[0].nationality = revNationMap.get("Norwegian"); // The Norwegian lives in the first house.
                 inhabitants[1].nationality = array[0];
                 inhabitants[2].nationality = array[1];
                 inhabitants[3].nationality = array[2];
