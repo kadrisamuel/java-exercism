@@ -255,152 +255,132 @@ class ZebraPuzzle {
 //
     boolean testPermutation(int scope, Inhabitant[] inhabitants) {
         for (Inhabitant inhabitant : inhabitants) {
-            try {
-                // nationality, color, drink
-                if (scope >= 1) {
+            // nationality, color, drink
+            if (scope >= 1) {
 
-                    // The Englishman lives in the red house.
-                    if (inhabitant.nationality == revNationMap.get("Englishman")) {
-                        if (inhabitant.houseColor != revColorMap.get("Red")) {
-                            System.out.println("The Englishman lives in the red house.");
-                            return false;
-                        }
+                // The Englishman lives in the red house.
+                if (inhabitant.nationality == revNationMap.get("Englishman")) {
+                    if (inhabitant.houseColor != revColorMap.get("Red")) {
+                        System.out.println("The Englishman lives in the red house.");
+                        return false;
                     }
+                }
 
-                    // The person in the green house drinks coffee
-                    if (inhabitant.houseColor == revColorMap.get("Green")) {
-                        if (inhabitant.drink != revDrinkMap.get("Coffee")) {
-                            System.out.println("The person in the green house drinks coffee");
-                            return false;
-                        }
-                        // The first house cannot be green, see explanatio below
-                        if (inhabitant.houseNumber == 1) {
-                            System.out.println("The first house cannot be green");
-                            return false;
-                        }
-                        // The green house is immediately to the right of the ivory house.
-                        try {
-                            if (inhabitant.houseNumber > 1 && inhabitants[inhabitant.houseNumber-2].houseColor != revColorMap.get("Ivory")) {
-                                System.out.println("The green house is immediately to the right of the ivory house.");
-                                return false;
-                            }
-                        } catch (Exception e) {
-                            System.err.println("Exception within: The person in the green house drinks coffee" + e);
-                        }
-                        
+                // The person in the green house drinks coffee
+                if (inhabitant.houseColor == revColorMap.get("Green")) {
+                    if (inhabitant.drink != revDrinkMap.get("Coffee")) {
+                        System.out.println("The person in the green house drinks coffee");
+                        return false;
                     }
-
-                    // The Ukrainian drinks tea.
-                    if (inhabitant.nationality == revNationMap.get("Ukrainian")) {
-                        if (inhabitant.drink != revDrinkMap.get("Tea")) {
-                            System.out.println("The Ukrainian drinks tea.");
-                            return false;
-                        }
+                    // The first house cannot be green, see explanatio below
+                    if (inhabitant.houseNumber == 1) {
+                        System.out.println("The first house cannot be green");
+                        return false;
                     }
-
-                    // The Norwegian lives in the first house.
-                    // The Norwegian lives next to the blue house.
-                    // => second house must be blue
                     // The green house is immediately to the right of the ivory house.
-                    // => first house cannot be green (because first house is next to blue house and has only one neighbor) 
-                    // or blue (because the second house is blue).
-                    if (inhabitant.nationality == revNationMap.get("Norwegian")) {
-                        if (inhabitant.houseNumber != 1 || inhabitant.houseColor == revColorMap.get("Green") || inhabitant.houseColor == revColorMap.get("Blue")) {
-                            System.out.println("The Norwegian lives in the first house. 1. if");
-                            return false;
-                        }
-                       try {
-                           if (inhabitant.houseNumber < 5 && !(inhabitants[inhabitant.houseNumber].houseColor == revColorMap.get("Blue"))) {
-                               System.out.println("The Norwegian lives in the first house. 2. if");
-                               return false;
-                           }
-                       } catch (Exception e) {
-                           System.err.println("Exception occurred within: The Norwegian lives in the first house." + e);
-                       }
-                    }
+                    if (inhabitant.houseNumber > 1 && inhabitants[inhabitant.houseNumber-2].houseColor != revColorMap.get("Ivory")) {
+                        System.out.println("The green house is immediately to the right of the ivory house.");
+                        return false;
+                    }   
                 }
-                if (scope >= 2) {
 
-                    // The Spaniard owns the dog.
-                    if (inhabitant.nationality == revNationMap.get("Spaniard")) {
-                        if (inhabitant.pet != revPetMap.get("Dog")) {
-                            System.out.println("The Spaniard owns the dog.");
-                            return false;
-                        }
-                    }
-
-                    // The snail owner likes to go dancing.
-                    if (inhabitant.pet == revPetMap.get("Snail")) {
-                        if (inhabitant.hobby != revHobbyMap.get("Dancing")) {
-                            System.out.println("The snail owner likes to go dancing.");
-                            return false;
-                        }
-                    }
-                    // The person in the yellow house is a painter.
-                    if (inhabitant.houseColor == revColorMap.get("Yellow")) {
-                        if (inhabitant.hobby != revHobbyMap.get("Painting")) {
-                            System.out.println("The person in the yellow house is a painter.");
-                            return false;
-                        }
-                        // The painter's house is next to the house with the horse.
-                        try {
-                           
-                            if ((inhabitant.houseNumber > 1 && (inhabitants[inhabitant.houseNumber-2].pet != revPetMap.get("Horse"))) && (inhabitant.houseNumber < 5 && (inhabitants[inhabitant.houseNumber].pet != revPetMap.get("Horse")))) {
-                                System.out.println("The painter's house is next to the house with the horse.");
-                                return false;
-                            }
-                        
-                        } catch (Exception e) {
-                            System.err.println("Exception occurred within: The painter's house is next to the house with the horse. " + e);
-                        }
-                    }
-                    // The person who enjoys reading lives in the house next to the person with the fox.
-                    if (inhabitant.hobby == revHobbyMap.get("Reading")) {
-                        printInhabitants(inhabitants);
-                        try {
-                            
-                            if ((inhabitant.houseNumber > 1 && (inhabitants[inhabitant.houseNumber-2].pet != revPetMap.get("Fox"))) && (inhabitant.houseNumber < 5 && (inhabitants[inhabitant.houseNumber].pet != revPetMap.get("Fox")))) {
-                                System.out.println("The person who enjoys reading lives in the house next to the person with the fox.");
-                                return false;
-                            }
-                        
-                        } catch (Exception e) {
-                            System.err.println("Exception occurred within: The person who enjoys reading lives in the house next to the person with the fox. " + e);
-                        }
-                    }
-                    // The person who plays football drinks orange juice.
-                    if (inhabitant.hobby == revHobbyMap.get("Football")) {
-                        if (inhabitant.drink != revDrinkMap.get("Orange Juice")) {
-                            System.out.println("The person who plays football drinks orange juice.");
-                            return false;
-                        }
-                    }
-                    // The Japanese person plays chess.
-                    if (inhabitant.nationality == revNationMap.get("Japanese")) {
-                        //The Japanese person plays chess.
-                        if (inhabitant.hobby != revHobbyMap.get("Chess")) {
-                            System.out.println("The Japanese person plays chess.");
-                            return false;
-                        }
-                        // The Japanese person owns a zebra
-                        if (inhabitant.pet != revPetMap.get("Zebra")) {
-                            System.out.println("The Japanese person owns a zebra");
-                            return false;
-                        }
-                    }
-                    // The Norwegian drinks water
-                    if (inhabitant.nationality == revNationMap.get("Norwegian")){
-                        if (inhabitant.drink != revDrinkMap.get("Water")) {
-                            System.out.println("The Norwegian drinks water");
-                            return false;
-                        }
+                // The Ukrainian drinks tea.
+                if (inhabitant.nationality == revNationMap.get("Ukrainian")) {
+                    if (inhabitant.drink != revDrinkMap.get("Tea")) {
+                        System.out.println("The Ukrainian drinks tea.");
+                        return false;
                     }
                 }
 
-            } catch (Exception e) {
-                System.err.println(e + " property might be empty");
+                // The Norwegian lives in the first house.
+                // The Norwegian lives next to the blue house.
+                // => second house must be blue
+                // The green house is immediately to the right of the ivory house.
+                // => first house cannot be green (because first house is next to blue house and has only one neighbor) 
+                // or blue (because the second house is blue).
+                if (inhabitant.nationality == revNationMap.get("Norwegian")) {
+                    if (inhabitant.houseNumber != 1 || inhabitant.houseColor == revColorMap.get("Green") || inhabitant.houseColor == revColorMap.get("Blue")) {
+                        System.out.println("The Norwegian lives in the first house. 1. if");
+                        return false;
+                    }
+                    if (inhabitant.houseNumber < 5 && !(inhabitants[inhabitant.houseNumber].houseColor == revColorMap.get("Blue"))) {
+                        System.out.println("The Norwegian lives in the first house. 2. if");
+                        return false;
+                    }
+                }
+            }
+
+            if (scope >= 2) {
+
+                // The Spaniard owns the dog.
+                if (inhabitant.nationality == revNationMap.get("Spaniard")) {
+                    if (inhabitant.pet != revPetMap.get("Dog")) {
+                        System.out.println("The Spaniard owns the dog.");
+                        return false;
+                    }
+                }
+
+                // The snail owner likes to go dancing.
+                if (inhabitant.pet == revPetMap.get("Snail")) {
+                    if (inhabitant.hobby != revHobbyMap.get("Dancing")) {
+                        System.out.println("The snail owner likes to go dancing.");
+                        return false;
+                    }
+                }
+
+                // The person in the yellow house is a painter.
+                if (inhabitant.houseColor == revColorMap.get("Yellow")) {
+                    if (inhabitant.hobby != revHobbyMap.get("Painting")) {
+                        System.out.println("The person in the yellow house is a painter.");
+                        return false;
+                    }
+                    // The painter's house is next to the house with the horse.
+                    if ((inhabitant.houseNumber > 1 && (inhabitants[inhabitant.houseNumber-2].pet != revPetMap.get("Horse"))) && (inhabitant.houseNumber < 5 && (inhabitants[inhabitant.houseNumber].pet != revPetMap.get("Horse")))) {
+                        System.out.println("The painter's house is next to the house with the horse.");
+                        return false;
+                    }
+                }
+
+                // The person who enjoys reading lives in the house next to the person with the fox.
+                if (inhabitant.hobby == revHobbyMap.get("Reading")) {
+                    if ((inhabitant.houseNumber > 1 && (inhabitants[inhabitant.houseNumber-2].pet != revPetMap.get("Fox"))) && (inhabitant.houseNumber < 5 && (inhabitants[inhabitant.houseNumber].pet != revPetMap.get("Fox")))) {
+                        System.out.println("The person who enjoys reading lives in the house next to the person with the fox.");
+                        return false;
+                    }
+                }
+
+                // The person who plays football drinks orange juice.
+                if (inhabitant.hobby == revHobbyMap.get("Football")) {
+                    if (inhabitant.drink != revDrinkMap.get("Orange Juice")) {
+                        System.out.println("The person who plays football drinks orange juice.");
+                        return false;
+                    }
+                }
+
+                // The Japanese person plays chess.
+                if (inhabitant.nationality == revNationMap.get("Japanese")) {
+                    //The Japanese person plays chess.
+                    if (inhabitant.hobby != revHobbyMap.get("Chess")) {
+                        System.out.println("The Japanese person plays chess.");
+                        return false;
+                    }
+                    // The Japanese person owns a zebra
+                    if (inhabitant.pet != revPetMap.get("Zebra")) {
+                        System.out.println("The Japanese person owns a zebra");
+                        return false;
+                    }
+                }
+
+                // The Norwegian drinks water
+                if (inhabitant.nationality == revNationMap.get("Norwegian")){
+                    if (inhabitant.drink != revDrinkMap.get("Water")) {
+                        System.out.println("The Norwegian drinks water");
+                        return false;
+                    }
+                }
             }
         }
+
         printInhabitants(inhabitants);
         return true;
     }
