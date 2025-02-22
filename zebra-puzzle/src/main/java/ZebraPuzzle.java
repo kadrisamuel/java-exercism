@@ -48,26 +48,20 @@ class ZebraPuzzle {
     }
 
     static {
-        //ZebraPuzzle puzzle = new ZebraPuzzle();
-        //inhabitants = puzzle.assignPropertiesToInhabitants(inhabitants);
+        ZebraPuzzle puzzle = new ZebraPuzzle();
+        inhabArray = puzzle.assignPropertiesToInhabitants(inhabArray);
     }
 
     public static void main(String[] args) {
-        //ZebraPuzzle test = new ZebraPuzzle();
-        //perm5.forEach(array -> System.out.println(Arrays.toString(array)));
 
-        //test.assignPropertiesToInhabitants(inhabitants);
-        //boolean solutionExists = test.testPermutation(2, inhabitants);
-
-
-        ZebraPuzzle test2 = new ZebraPuzzle();
-        test2.assignCorrectProperties(inhabArrayTest);
-        boolean correctSolutionExists = test2.testPermutation(2, inhabArrayTest);
+        /* ZebraPuzzle test = new ZebraPuzzle();
+        test.assignCorrectProperties(inhabArrayTest);
+        boolean correctSolutionExists = test.testPermutation(2, inhabArrayTest);
         if (correctSolutionExists) {
             System.out.println("Solution!");
         } else {
             System.out.println("So sad!");
-        }
+        }*/
     }
     
 
