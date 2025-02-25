@@ -34,14 +34,16 @@ class BookStore {
     }
 
     List<Integer> getBestPiles(List<Integer> maxLens) {
+        List<Integer> betterPile = new ArrayList<>(maxLens);
         int len = maxLens.size();
-        if (len > 1 && (maxLens.get(len-2) == 5 &&maxLens.get(len-1) == 3)) {
-            ArrayList<Integer> betterPile = new ArrayList<>(maxLens);
-            betterPile.set(len - 2, 4);
-            betterPile.set(len - 1, 4);
-            return betterPile;
+        if (len > 1 && (maxLens.contains(5) && maxLens.contains(3))) {
+            betterPile.remove(Integer.valueOf(5));
+            betterPile.remove(Integer.valueOf(3));
+            betterPile.addAll(List.of(4,4));
+            
+            betterPile = getBestPiles(betterPile);
         }
-        return maxLens;
+        return betterPile;
     }
 
     List<Integer> getMaxPileLens(List<Integer> books) {
