@@ -1,28 +1,47 @@
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 class BookStore {
-    static final int COST = 8;
-    static final double DISCOUNT_MULTIPLIER_2_DIFF = 0.95;
-    static final double DISCOUNT_MULTIPLIER_3_DIFF = 0.90;
-    static final double DISCOUNT_MULTIPLIER_4_DIFF = 0.80;
-    static final double DISCOUNT_MULTIPLIER_5_DIFF = 0.75;
+    static final double COST = 8;
+    static final double[] DISCOUNT_MULTIPLIERS = {1, 0.95, 0.90, 0.80, 0.75};
+
     
-    // make set of unique items, after every iteration, remove the set from list
-    // save the lengths of the sets to a list
+    
     // redistribute length values in different ways
     // calculate cost for each way = (len1 * discount multiplier for that len) + (lenK * discount) + ...
     // compare costs of ways
     // final cost = for each list add up (len * discount multiplier for that len) * 8
     double calculateBasketCost(List<Integer> books) {
+        // make set of unique items, after every iteration, remove the set from list
+        // save the lengths of the sets to a list
         List<Integer> bookPileMaxLens = new ArrayList<>(getMaxPileLens(books));
-    
-        return 8.00;
+        List<Integer> bestPiles = new ArrayList<>();
+        bestPiles = getBestPiles(bookPileMaxLens);
+        
+        return getTotal(bestPiles);
+    }
+
+    double getTotal(List<Integer> bestPiles) {
+        //double cost = IntStream.range(0, bestPiles.size()).forEach(index -> cost = bestPiles.get(index)*DISCOUNT_MULTIPLIERS[index]*8).collect(Collectors.summingDouble(double::));//bestPiles.stream().collect(Collectors.summingDouble());
+        double total = 0;
+        for (int i = 0; i < bestPiles.size(); i++) {
+            total += bestPiles.get(i) * DISCOUNT_MULTIPLIERS[bestPiles.get(i)-1];
+        }
+        return total * COST;
+    }
+
+    List<Integer> getBestPiles(List<Integer> maxLens) {
+        int len = maxLens.size();
+        if (len > 1 && (maxLens.get(len-2) == 5 &&maxLens.get(len-1) == 3)) {
+            ArrayList<Integer> betterPile = new ArrayList<>(maxLens);
+            betterPile.set(len - 2, 4);
+            betterPile.set(len - 1, 4);
+            return betterPile;
+        }
+        return maxLens;
     }
 
     List<Integer> getMaxPileLens(List<Integer> books) {
