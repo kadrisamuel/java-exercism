@@ -20,6 +20,12 @@ class BookStore {
     // compare costs of ways
     // final cost = for each list add up (len * discount multiplier for that len) * 8
     double calculateBasketCost(List<Integer> books) {
+        List<Integer> bookPileMaxLens = new ArrayList<>(getMaxPileLens(books));
+    
+        return 8.00;
+    }
+
+    List<Integer> getMaxPileLens(List<Integer> books) {
         List<Integer> mutableBooks = new ArrayList<>(books);
         Collections.sort(mutableBooks);
         List<Integer> bookPileLens = new ArrayList<>();
@@ -27,9 +33,8 @@ class BookStore {
             List<Integer> distinct_titles = mutableBooks.stream().distinct().collect(Collectors.toList());
             bookPileLens.add(distinct_titles.size());
             IntStream.range(0, distinct_titles.size()).forEach(index -> mutableBooks.remove(mutableBooks.indexOf(distinct_titles.get(index))));
-        }        
-    
-        return 8.00;
+        } 
+        return bookPileLens;
     }
 
 }
