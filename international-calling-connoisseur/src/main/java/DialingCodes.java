@@ -23,15 +23,13 @@ public class DialingCodes {
     }
 
     public Integer findDialingCode(String country) {
-        if (!codes.containsValue(country)) {
-            return null;
-        }
         return codes
             .entrySet()
             .stream()
             .filter(entry -> country.equals(entry.getValue()))
-            .mapToInt(Map.Entry::getKey)
-            .toArray()[0];
+            .map(Map.Entry::getKey)
+            .findFirst()
+            .orElse(null);
     }
 
     public void updateCountryDialingCode(Integer code, String country) {
