@@ -9,12 +9,9 @@ class ArmstrongNumbers {
         asStr = Integer.toString(numberToCheck);
         length = asStr.length();
 
-        for (int i = 0; i < length; i++) {
-            // {asStr.charAt(i) - '0'} converts a char into an int
-            sum += Math.pow(asStr.charAt(i) - '0', length);
-        }
+        asStr.chars().forEach(c -> {sum += Math.pow(c - '0', length);});
         
-        return (sum == numberToCheck);
+        return sum == numberToCheck;
     }
 
 }
