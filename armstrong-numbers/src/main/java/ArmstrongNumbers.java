@@ -1,15 +1,20 @@
 class ArmstrongNumbers {
-    static int length;
+    private static int length;
+    private static String asStr;
+    private int sum = 0;
 
     boolean isArmstrongNumber(int numberToCheck) {
-        if (numberToCheck != 0) {
-            numberToCheck = Math.abs(numberToCheck);
-            length = (int) (Math.log10(numberToCheck) + 1);
-            for (int i = 1; i < length + 1; i++) {
-                
-            }
+        
+        numberToCheck = Math.abs(numberToCheck);
+        asStr = Integer.toString(numberToCheck);
+        length = asStr.length();
+
+        for (int i = 0; i < length; i++) {
+            // {asStr.charAt(i) - '0'} converts a char into an int
+            sum += Math.pow(asStr.charAt(i) - '0', length);
         }
-        return true;
+        
+        return (sum == numberToCheck);
     }
 
 }
