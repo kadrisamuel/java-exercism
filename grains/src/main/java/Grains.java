@@ -1,4 +1,6 @@
 import java.math.BigInteger;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 
 class Grains {
@@ -11,7 +13,10 @@ class Grains {
     }
 
     BigInteger grainsOnBoard() {
-        throw new UnsupportedOperationException("Delete this statement and write your own implementation.");
-    }
-
+        BigInteger total = BigInteger.ZERO;
+        for (int i = 1; i < 65; i++) {
+            total = total.add(grainsOnSquare(i));
+        }
+        return total;
+    }    
 }
