@@ -1,25 +1,31 @@
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 class HighScores {
+    List<Integer> scores = List.of();
+    List<Integer> sortedScores;
 
     public HighScores(List<Integer> highScores) {
-        throw new UnsupportedOperationException("Delete this statement and write your own implementation.");
+        this.scores = highScores;
+        this.sortedScores = new ArrayList<>(highScores);
+        Collections.sort(sortedScores);
     }
 
     List<Integer> scores() {
-        throw new UnsupportedOperationException("Delete this statement and write your own implementation.");
+        return this.scores;
     }
 
     Integer latest() {
-        throw new UnsupportedOperationException("Delete this statement and write your own implementation.");
+        return scores.getLast();
     }
 
     Integer personalBest() {
-        throw new UnsupportedOperationException("Delete this statement and write your own implementation.");
+        return sortedScores.getLast();
     }
 
     List<Integer> personalTopThree() {
-        throw new UnsupportedOperationException("Delete this statement and write your own implementation.");
+        return (sortedScores.size() >= 3)? sortedScores.reversed().subList(0, 3) : sortedScores.reversed().subList(0, sortedScores.size());
     }
 
 }
