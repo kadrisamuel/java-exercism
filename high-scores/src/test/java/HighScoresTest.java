@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.List;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -80,6 +81,13 @@ public class HighScoresTest {
     public void callingScoresAfterPersonalBest() {
         HighScores highScores = new HighScores(Arrays.asList(20, 70, 15, 25, 30));
         highScores.personalBest();
+        assertThat(highScores.scores()).isEqualTo(Arrays.asList(20, 70, 15, 25, 30));
+    }
+    @Test
+    public void callingScoresEditingResultAndCallingAgain() {
+        HighScores highScores = new HighScores(Arrays.asList(20, 70, 15, 25, 30));
+        List<Integer> scores = highScores.scores();
+        scores.add(90);
         assertThat(highScores.scores()).isEqualTo(Arrays.asList(20, 70, 15, 25, 30));
     }
 }
