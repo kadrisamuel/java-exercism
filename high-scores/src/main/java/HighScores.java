@@ -1,16 +1,16 @@
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 class HighScores {
-    List<Integer> scores;
+    private final List<Integer> scores;
 
     public HighScores(List<Integer> highScores) {
-        this.scores = highScores;
+        this.scores = new ArrayList<>(highScores);
     }
 
     List<Integer> scores() {
-        return this.scores;
+        return new ArrayList<>(this.scores);
     }
 
     Integer latest() {
@@ -18,7 +18,7 @@ class HighScores {
     }
 
     Integer personalBest() {
-        return Collections.max(scores);
+        return personalTopThree().get(0);
     }
 
     List<Integer> personalTopThree() {
