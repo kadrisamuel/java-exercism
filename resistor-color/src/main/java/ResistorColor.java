@@ -1,16 +1,12 @@
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.IntStream;
+import java.util.Arrays;
+import java.util.List;
 
 class ResistorColor {
     private static final String[] colors = {"black", "brown", "red", "orange", "yellow", "green", "blue", "violet", "grey", "white"};
-    private static final Map<String, Integer> lookup = new HashMap<>();
-    static {
-        IntStream.range(0, colors.length).forEach(i -> lookup.put(colors[i], i));
-    }
+    private static final List<String> lookup = Arrays.asList(colors);
     
     int colorCode(String color) {
-        return lookup.get(color);
+        return lookup.indexOf(color);
     }
 
     String[] colors() {
