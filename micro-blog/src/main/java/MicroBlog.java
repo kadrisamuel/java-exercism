@@ -1,5 +1,10 @@
+import java.util.stream.Collectors;
+
 class MicroBlog {
     public String truncate(String input) {
-        throw new UnsupportedOperationException("Delete this statement and write your own implementation.");
+        return input.codePoints()
+            .limit(5)
+            .mapToObj(c -> Character.toString(c))
+            .collect(Collectors.joining());
     }
 }
