@@ -1,7 +1,12 @@
 public class PangramChecker {
 
     public boolean isPangram(String input) {
-        throw new UnsupportedOperationException("Delete this statement and write your own implementation.");
+        int[] cps = input.toLowerCase().replaceAll("[^a-z]", "")
+            .codePoints()
+            .distinct()
+            .toArray();
+
+        return cps.length == 26;
     }
 
 }
