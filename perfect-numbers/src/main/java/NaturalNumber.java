@@ -3,7 +3,7 @@ import java.util.stream.IntStream;
 class NaturalNumber {
 
     private final int number;
-    private int aliquotSum = 0;
+    private final int aliquotSum;
 
     NaturalNumber(int number) {
         if (number < 1) { throw new IllegalArgumentException("You must supply a natural number (positive integer)");}
@@ -29,16 +29,16 @@ class NaturalNumber {
      * Edge case: if number is 1, its aliquotnumber is 0.
      */
     private int getAliquotSum(int number) {
-        IntStream
-        .rangeClosed(1, (int) Math.sqrt(number))
-        .forEach(i -> {
-            if (number % i == 0 && number != 1) {
-                aliquotSum += i;
-                if (number / i != number && number / i != i) {
-                    aliquotSum += (number / i);
+        return IntStream
+            .rangeClosed(1, (int) Math.sqrt(number))
+            .mapMulti((i, consumer) -> {
+                if (number % i == 0 && number != 1) {
+                    consumer.accept(i);
+                    if (number / i != number && number / i != i) {
+                        consumer.accept(number / i);
+                    }
                 }
-            }
-        });
-        return aliquotSum;
+            }).sum();
     }
+
 }
