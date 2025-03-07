@@ -3,7 +3,7 @@ public class PangramChecker {
 
     public boolean isPangram(String input) {
         return input.toLowerCase()
-            .chars()
+            .codePoints()
             .filter(Character::isLetter)
             .distinct()
             .count() == LETTERS_IN_ALPHABET;
