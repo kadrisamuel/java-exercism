@@ -1,8 +1,10 @@
 public class EliudsEggs {
     public int eggCount(int number) {
-        return (int) Integer.toBinaryString(number)
-            .chars()
-            .filter(c -> c == '1')
-            .count();
+        int count = 0;
+        while (number > 0) {
+            count += number & 1;
+            number >>>= 1;
+        }
+        return count;
     }
 }
