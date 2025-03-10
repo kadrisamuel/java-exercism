@@ -37,10 +37,30 @@ public class Say {
         put(109, "billion");
     }};
 
-    public String say(long number) {
+    public String say(long number) throws IllegalArgumentException {
         if (number < 0 || number > 999_999_999_999L) {
             throw new IllegalArgumentException("Input has to be between 0 and 999,999,999,999");
         }
+        final String num = Long.toString(number);
+        final int length = num.length();
+        return digitsTo99(num).toString();
 
+    }
+
+    StringBuffer digitsTo99(String number) {
+        StringBuffer temp = new StringBuffer();
+        // 0-20, 30, 40, 50, 60, 70, 80, 90
+        if (number.length() == 1 || number.charAt(0) == '0' || number.charAt(0) == '1' || number.charAt(1) == '0' ) {
+            temp.append(lookup.get(Integer.valueOf(number)));
+            return temp;
+        }
+
+        // everything else in range 21-99
+        temp.append(digitsTo99(String.valueOf(number.charAt(0) + "0")));
+        temp.append("-");
+        
+        // 1-9
+        temp.append(digitsTo99(String.valueOf(number.charAt(0))));
+        return temp;
     }
 }
