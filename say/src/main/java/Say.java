@@ -2,7 +2,7 @@ import java.util.HashMap;
 
 public class Say {
     HashMap<Integer, String> lookup = new HashMap<>(){{
-        put(-1, "-");
+        //put(-1, "-");
         put(0, "zero");
         put(1, "one");
         put(2, "two");
@@ -31,10 +31,10 @@ public class Say {
         put(70, "seventy");
         put(80, "eighty");
         put(90, "ninety");
-        put(100, "hundred");
-        put(103, "thousand");
-        put(106, "million");
-        put(109, "billion");
+        //put(100, "hundred");
+        //put(103, "thousand");
+        //put(106, "million");
+        //put(109, "billion");
     }};
 
     public String say(long number) throws IllegalArgumentException {
@@ -49,18 +49,30 @@ public class Say {
 
     StringBuffer digitsTo99(String number) {
         StringBuffer temp = new StringBuffer();
+
         // 0-20, 30, 40, 50, 60, 70, 80, 90
-        if (number.length() == 1 || number.charAt(0) == '0' || number.charAt(0) == '1' || number.charAt(1) == '0' ) {
+        if (lookup.containsKey(Integer.valueOf(number)) ) {
             temp.append(lookup.get(Integer.valueOf(number)));
             return temp;
         }
+        if (number.length() == 2) {
+            // everything else in range 21-99
+            temp.append(digitsTo99(String.valueOf(number.charAt(0) + "0")));
+            temp.append("-");
+            // x1-x9
+            temp.append(digitsTo99(String.valueOf(number.charAt(1))));
+            return temp;
+        }
 
-        // everything else in range 21-99
-        temp.append(digitsTo99(String.valueOf(number.charAt(0) + "0")));
-        temp.append("-");
-        
-        // 1-9
-        temp.append(digitsTo99(String.valueOf(number.charAt(0))));
+        // hundreds
+        if (number.length() == 3) {
+            temp.append(digitsTo99(String.valueOf(number.charAt(0)))).append(" hundred");
+            if (number.charAt(1) != '0' || number.charAt(2) != '0') {
+                temp.append(" ").append(digitsTo99(number.substring(1, 3)));
+            }
+            return temp;
+        }
         return temp;
+
     }
 }
