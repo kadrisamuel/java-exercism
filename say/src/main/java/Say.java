@@ -71,7 +71,7 @@ public class Say {
                 StringBuffer temp = new StringBuffer();
 
                 // if there is only one piece, there can be no scale over 100
-                // if piece = 0, it is added here
+                // if piece = zero, it is added here
                 // other pieces with zeroes are ignored
                 if (pieces.size() == 1) {
                     temp.append(pieces.get(x));
@@ -79,9 +79,7 @@ public class Say {
 
                 // if there are more pieces than 1 and the current one is not zero
                 // add the current piece and a space
-                // TODO: it still adds zero somehow
-                String test =  pieces.get(x).toString();
-                if (pieces.size() > 1 && test != "zero") {
+                if (pieces.size() > 1 && !pieces.get(x).toString().equals("zero")) {
                     temp.append(pieces.get(x)).append(" ");
                     // if there is a scale available, add it
                     if (scales.size() - 1 >= x) {
@@ -91,7 +89,8 @@ public class Say {
                 return temp;
             })
             .collect(StringBuffer::new, StringBuffer::append, StringBuffer::append)
-            .toString();//todo: make sure to strip any trailing spaces
+            .toString()
+            .strip();
         
         return result;
     }
