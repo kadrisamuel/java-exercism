@@ -132,6 +132,7 @@ public class Say {
         return temp;
     }
 
+    // handle numbers up to 999
     private StringBuffer digitsToSB(String number) {
         StringBuffer temp = new StringBuffer();
 
