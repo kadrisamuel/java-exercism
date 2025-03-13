@@ -32,42 +32,67 @@ public class Say {
         put(90, "ninety");
     }};
 
-    final static long BILLION = 1_000_000_000L;
-    final static long MILLION = 1_000_000L;
-    final static long THOUSAND = 1_000L;
+    final static long UPPER_BOUND = 999_999_999_999L;
+    final static long BILLION = 1_000_000_000;
+    final static long MILLION = 1_000_000;
+    final static long THOUSAND = 1_000;
+    final static long HUNDRED = 100;
     final static String SPACE = " ";
     final static String DASH = "-"; 
 
     public String say(long number) throws IllegalArgumentException {
 
-        if (number < 0 || number > 999_999_999_999L) {
+        if (number < 0 || number > UPPER_BOUND) {
             throw new IllegalArgumentException("Input has to be between 0 and 999,999,999,999");
         }
 
-        if (number == 0) {
-            return "zero";
-        }
-
-        return sayIt(number);
+        return sayIt(number).toString();
     }
 
-    private String sayIt(long number) {
-        if (number >= BILLION) { return sayIt(number/BILLION) + SPACE + "billion" + more(number % BILLION); }
-        if (number >= MILLION) { return sayIt(number/MILLION) + SPACE + "million" + more(number % MILLION); }
-        if (number >= THOUSAND) { return sayIt(number/THOUSAND) + SPACE + "thousand" + more(number % THOUSAND); }
-        if (number >= 100) { return sayIt(number/100) + SPACE + "hundred" + more(number % 100); }
+    private StringBuffer sayIt(long number) {
+        StringBuffer collect = new StringBuffer();
+
+        if (number >= BILLION) { 
+            return collect.append(sayIt(number/BILLION))
+                .append(SPACE).append("billion")
+                .append(more(number % BILLION)); 
+        }
+
+        if (number >= MILLION) { 
+            return collect.append(sayIt(number/MILLION))
+                .append(SPACE).append("million")
+                .append(more(number % MILLION)); 
+            }
+
+        if (number >= THOUSAND) { 
+            return collect.append(sayIt(number/THOUSAND))
+                .append(SPACE).append("thousand")
+                .append(more(number % THOUSAND)); 
+        }
+
+        if (number >= 100) { 
+            return collect.append(sayIt(number / 100))
+                .append(SPACE).append("hundred")
+                .append(more(number % 100)); }
 
         Integer num = (int) number;
-        if (number >= 20) {
-            if (number % 10 != 0) {
-                return lookup.get(num - num % 10) + DASH + lookup.get(num % 10);
+        if (num >= 20) {
+            if (num % 10 != 0) {
+                return collect.append(lookup.get(num - num % 10))
+                    .append(DASH).append(lookup.get(num % 10));
             }
-            return lookup.get(num);
+            return collect.append(lookup.get(num));
         }
-        return lookup.get(num);
+
+        if (num < 20) {
+            return collect.append(lookup.get(num));
+        }
+
+        return collect;
     }
 
-    private String more(long number) {
-        return (number != 0)? SPACE + sayIt(number) : "";
+    private StringBuffer more(long number) {
+        StringBuffer collectMore = new StringBuffer();
+        return collectMore.append((number != 0)? SPACE + sayIt(number) : "");
     }
 }
