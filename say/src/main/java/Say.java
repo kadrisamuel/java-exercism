@@ -1,4 +1,12 @@
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 public class Say {
     final static HashMap<Integer, String> lookup = new HashMap<>(){{
@@ -46,7 +54,29 @@ public class Say {
             throw new IllegalArgumentException("Input has to be between 0 and 999,999,999,999");
         }
 
-        return sayIt(number).toString();
+        String result = sayIt(number).toString();
+        withVoice(result);
+
+        return result;
+    }
+
+    private void withVoice(String command) {
+        ProcessBuilder builder = new ProcessBuilder("/bin/sh", "-c", "say \"" + command + "\"");
+        Process process;
+        try {
+            process = builder.start();
+            Voice voice = new Voice(process.getInputStream(), System.out::println);
+            ExecutorService executorService = Executors.newSingleThreadExecutor();
+            Future<?> future = executorService.submit(voice);
+            int exitCode = process.waitFor();
+
+            assertDoesNotThrow(() -> future.get(10, TimeUnit.SECONDS));
+            assertEquals(0, exitCode); 
+            executorService.shutdown();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }    
+
     }
 
     private StringBuffer sayIt(long number) {
