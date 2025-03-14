@@ -1,18 +1,17 @@
 class Scrabble {
-    private int score;
+    private final int score;
 
     Scrabble(String word) {
-        this.score = word.codePoints().map(letter -> getPoints((char) letter)).sum();
+        this.score = word.toUpperCase()
+            .codePoints()
+            .reduce(0, (score, letter) -> score + getPoints((char) letter));
     }
-
 
     int getScore() {
         return this.score;
     }
 
     private int getPoints(char letter) {
-        letter = Character.toUpperCase(letter);
-
         return switch (letter) {
             case 'A', 'E', 'I', 'O', 'U', 'L', 'N', 'R', 'S', 'T' -> 1;        
             case 'D', 'G' -> 2;
