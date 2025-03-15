@@ -1,23 +1,17 @@
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
 class HandshakeCalculator {
-    private List<Signal> output;
-    private int maxDigits;
 
     List<Signal> calculateHandshake(int number) {
-        output  = new ArrayList<>(Integer.bitCount(number));
-        String input = new StringBuffer(Integer.toBinaryString(number))
-            .reverse().toString();
-        maxDigits = (input.length() < 4)? input.length() : 4;
 
-        IntStream.range(0, maxDigits)
-            .filter(x -> input.charAt(x) == '1')
-            .forEach(x -> output.add(Signal.getSignal(x)));
+        List<Signal> output = IntStream.range(0, 4)
+            .filter(x -> ((1 << x) & number) > 0)
+            .mapToObj(x -> Signal.values()[x])
+            .toList();
 
 
-        if (input.length() > 4 && input.charAt(4) == '1') {
+        if (((1 << 4) & number) > 0) {
             return output.reversed();
         }
 
