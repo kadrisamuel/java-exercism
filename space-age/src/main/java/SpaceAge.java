@@ -1,8 +1,10 @@
 class SpaceAge {
     private final double seconds;
+    private final double earthAge;
 
     SpaceAge(double seconds) {
         this.seconds = seconds;
+        this.earthAge = seconds / 31_557_600;
     }
 
     double getSeconds() {
@@ -10,35 +12,35 @@ class SpaceAge {
     }
 
     double onEarth() {
-        return this.seconds / 31_557_600;
+        return earthAge;
     }
 
     double onMercury() {
-        throw new UnsupportedOperationException("Delete this statement and write your own implementation.");
+        return earthAge / Planet.MERCURY.getMultiplier();
     }
 
     double onVenus() {
-        throw new UnsupportedOperationException("Delete this statement and write your own implementation.");
+        return earthAge / Planet.VENUS.getMultiplier();
     }
 
     double onMars() {
-        throw new UnsupportedOperationException("Delete this statement and write your own implementation.");
+        return earthAge / Planet.MARS.getMultiplier();
     }
 
     double onJupiter() {
-        throw new UnsupportedOperationException("Delete this statement and write your own implementation.");
+        return earthAge / Planet.JUPITER.getMultiplier();
     }
 
     double onSaturn() {
-        throw new UnsupportedOperationException("Delete this statement and write your own implementation.");
+        return earthAge / Planet.SATURN.getMultiplier();
     }
 
     double onUranus() {
-        throw new UnsupportedOperationException("Delete this statement and write your own implementation.");
+        return earthAge / Planet.URANUS.getMultiplier();
     }
 
     double onNeptune() {
-        throw new UnsupportedOperationException("Delete this statement and write your own implementation.");
+        return earthAge / Planet.NEPTUNE.getMultiplier();
     }
 
 }
