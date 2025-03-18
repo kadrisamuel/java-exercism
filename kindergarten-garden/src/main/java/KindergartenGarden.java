@@ -1,5 +1,4 @@
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 class KindergartenGarden {
@@ -15,7 +14,7 @@ class KindergartenGarden {
             .flatMap(line -> Stream.of(
                 Plant.getPlant(line.charAt(STUDENTS.indexOf(student) * 2)), 
                 Plant.getPlant(line.charAt(STUDENTS.indexOf(student) * 2 + 1))))
-            .collect(Collectors.toList());
+            .toList();
     }
 
 }
