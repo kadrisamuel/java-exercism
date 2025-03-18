@@ -1,25 +1,21 @@
 import java.util.List;
-import java.util.stream.IntStream;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 class KindergartenGarden {
     private final static List<String> STUDENTS = List.of("Alice", "Bob", "Charlie", "David", "Eve", "Fred", "Ginny", "Harriet", "Ileana", "Joseph", "Kincaid", "Larry"); 
-    private final List<List<Plant>> plants;
+    private final String garden;
 
     KindergartenGarden(String garden) {
-        String[] rows = garden.split("\n");
-
-        this.plants = IntStream.range(0, garden.length() / 4)
-            .mapToObj(student -> List.of(
-                Plant.getPlant(rows[0].charAt(student * 2)),
-                Plant.getPlant(rows[0].charAt(student * 2 + 1)),
-                Plant.getPlant(rows[1].charAt(student * 2)),
-                Plant.getPlant(rows[1].charAt(student * 2 + 1))
-            ))
-            .toList();
+        this.garden = garden;
     }
 
     List<Plant> getPlantsOfStudent(String student) {
-        return plants.get(STUDENTS.indexOf(student));
+        return garden.lines()
+            .flatMap(line -> Stream.of(
+                Plant.getPlant(line.charAt(STUDENTS.indexOf(student) * 2)), 
+                Plant.getPlant(line.charAt(STUDENTS.indexOf(student) * 2 + 1))))
+            .collect(Collectors.toList());
     }
 
 }
