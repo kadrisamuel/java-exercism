@@ -1,88 +1,54 @@
 import java.util.Arrays;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Collections;
+import java.util.List;
 
 class Yacht {
-    private int[] dice;
-    private YachtCategory yachtCategory;
-    private final static int[] LITTLE_STRAIGHT = {1, 2, 3, 4, 5};
-    private final static int[] BIG_STRAIGHT = {2, 3, 4, 5, 6};
+    private final List<Integer> dice;
+    private final YachtCategory yachtCategory;
+    private final static List<Integer> LITTLE_STRAIGHT = List.of(1, 2, 3, 4, 5);
+    private final static List<Integer> BIG_STRAIGHT = List.of(2, 3, 4, 5, 6);
 
     Yacht(int[] dice, YachtCategory yachtCategory) {
-        this.dice = Arrays.stream(dice).sorted().toArray();
+        this.dice = Arrays.stream(dice).boxed().sorted().toList();
         this.yachtCategory = yachtCategory;
     }
 
     int score() {
         switch (yachtCategory) {
             case YACHT:
-                return (Arrays.stream(dice).distinct().count() == 1)? 50 : 0;
+                return (dice.stream().distinct().count() == 1)? 50 : 0;
             case ONES:
-                return (int) Arrays.stream(dice).filter(x -> x == 1).count();
+                return (int) dice.stream().filter(x -> x == 1).count();
             case TWOS:
-                return 2 * (int) Arrays.stream(dice).filter(x -> x == 2).count();
+                return 2 * (int) dice.stream().filter(x -> x == 2).count();
             case THREES:
-                return 3 * (int) Arrays.stream(dice).filter(x -> x == 3).count();
+                return 3 * (int) dice.stream().filter(x -> x == 3).count();
             case FOURS:
-                return 4 * (int) Arrays.stream(dice).filter(x -> x == 4).count();
+                return 4 * (int) dice.stream().filter(x -> x == 4).count();
             case FIVES:
-                return 5 * (int) Arrays.stream(dice).filter(x -> x == 5).count();
+                return 5 * (int) dice.stream().filter(x -> x == 5).count();
             case SIXES:
-                return 6 * (int) Arrays.stream(dice).filter(x -> x == 6).count();
+                return 6 * (int) dice.stream().filter(x -> x == 6).count();
 
-            case FULL_HOUSE: {
-                Map<Integer, Integer> lookup = getFrequencyMap();
+            case FULL_HOUSE: 
+                return dice.stream().distinct().count() == 2 && 
+                    dice.stream().distinct().allMatch(n -> Collections.frequency(dice, n) >= 2)?
+                    dice.stream().reduce(0, (a, b) -> a + b) : 0;
 
-                if (lookup.containsValue(2) && lookup.containsValue(3)) {
-                    return lookup.entrySet().stream()
-                    .filter(entry -> entry.getValue() == 2)
-                    .map(entry -> entry.getKey() * 2)
-                    .findFirst()
-                    .orElse(-1)
-                    +
-                    lookup.entrySet().stream()
-                    .filter(entry -> entry.getValue() == 3)
-                    .map(entry -> entry.getKey() * 3)
-                    .findFirst()
-                    .orElse(-1);
-                }
-
-                return 0;
-            }
-
-            case FOUR_OF_A_KIND: {
-                Map<Integer, Integer> lookup = getFrequencyMap();
-
-                if (lookup.containsValue(4) || lookup.containsValue(5)) {
-                    return lookup.entrySet().stream()
-                    .filter(entry -> entry.getValue() >= 4)
-                    .map(entry -> entry.getKey() * 4)
-                    .findFirst()
-                    .orElse(-1);
-                }
-
-                return 0;
-            }
+            case FOUR_OF_A_KIND: 
+                return dice.stream().filter(n -> Collections.frequency(dice, n) >= 4)
+                    .limit(4).reduce(0, (a, b) -> a + b);
                 
             case LITTLE_STRAIGHT:
-                return Arrays.compare(LITTLE_STRAIGHT, dice) == 0? 30 : 0;
+                return dice.containsAll(LITTLE_STRAIGHT)? 30 : 0;
             case BIG_STRAIGHT:
-                return Arrays.compare(BIG_STRAIGHT, dice) == 0? 30 : 0;
+                return dice.containsAll(BIG_STRAIGHT)? 30 : 0;
             case CHOICE:
-                return Arrays.stream(dice).sum();
+                return dice.stream().reduce(0, (a, b) -> a + b);
         
             default:
                 return 0;
         }
-    }
-
-    private Map<Integer, Integer> getFrequencyMap(){
-        return Arrays.stream(dice)
-            .boxed()
-            .collect(Collectors.groupingBy(
-                i -> i, 
-                Collectors.reducing(0, e -> 1, Integer::sum)
-            ));
     }
 
 }
