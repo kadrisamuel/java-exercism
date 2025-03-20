@@ -14,41 +14,51 @@ class Yacht {
     }
 
     int score() {
-        switch (yachtCategory) {
-            case YACHT:
-                return (dice.stream().distinct().count() == 1)? 50 : 0;
-            case ONES:
-                return (int) dice.stream().filter(x -> x == 1).count();
-            case TWOS:
-                return 2 * (int) dice.stream().filter(x -> x == 2).count();
-            case THREES:
-                return 3 * (int) dice.stream().filter(x -> x == 3).count();
-            case FOURS:
-                return 4 * (int) dice.stream().filter(x -> x == 4).count();
-            case FIVES:
-                return 5 * (int) dice.stream().filter(x -> x == 5).count();
-            case SIXES:
-                return 6 * (int) dice.stream().filter(x -> x == 6).count();
+        return switch (yachtCategory) {
+            case YACHT -> getYachtScore();
+            case ONES -> getBasicScore(1);
+            case TWOS -> getBasicScore(2);
+            case THREES -> getBasicScore(3);
+            case FOURS -> getBasicScore(4);            
+            case FIVES -> getBasicScore(5);
+            case SIXES -> getBasicScore(6);
+            case FULL_HOUSE -> getHouseScore();
+            case FOUR_OF_A_KIND -> getFourScore(); 
+            case LITTLE_STRAIGHT -> getLittleScore();
+            case BIG_STRAIGHT -> getBigScore();
+            case CHOICE -> getChoiceScore();
+        };
+    }
 
-            case FULL_HOUSE: 
-                return dice.stream().distinct().count() == 2 && 
+    int getBasicScore(int nr) {
+        return nr * (int) dice.stream().filter(x -> x == nr).count();
+    }
+
+    int getYachtScore() {
+        return (dice.stream().distinct().count() == 1)? 50 : 0;
+    }
+
+    int getHouseScore(){
+        return dice.stream().distinct().count() == 2 && 
                     dice.stream().distinct().allMatch(n -> Collections.frequency(dice, n) >= 2)?
                     dice.stream().reduce(0, (a, b) -> a + b) : 0;
+    }
 
-            case FOUR_OF_A_KIND: 
-                return dice.stream().filter(n -> Collections.frequency(dice, n) >= 4)
+    int getFourScore() {
+        return dice.stream().filter(n -> Collections.frequency(dice, n) >= 4)
                     .limit(4).reduce(0, (a, b) -> a + b);
-                
-            case LITTLE_STRAIGHT:
-                return dice.containsAll(LITTLE_STRAIGHT)? 30 : 0;
-            case BIG_STRAIGHT:
-                return dice.containsAll(BIG_STRAIGHT)? 30 : 0;
-            case CHOICE:
-                return dice.stream().reduce(0, (a, b) -> a + b);
-        
-            default:
-                return 0;
-        }
+    }
+
+    int getLittleScore(){
+        return dice.containsAll(LITTLE_STRAIGHT)? 30 : 0;
+    }
+
+    int getBigScore(){
+        return dice.containsAll(BIG_STRAIGHT)? 30 : 0;
+    }
+
+    int getChoiceScore(){
+        return dice.stream().reduce(0, (a, b) -> a + b);
     }
 
 }
