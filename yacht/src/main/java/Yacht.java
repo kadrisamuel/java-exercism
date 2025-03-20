@@ -1,11 +1,6 @@
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Map;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 class Yacht {
     private int[] dice;
@@ -34,28 +29,40 @@ class Yacht {
                 return 5 * (int) Arrays.stream(dice).filter(x -> x == 5).count();
             case SIXES:
                 return 6 * (int) Arrays.stream(dice).filter(x -> x == 6).count();
-            case FULL_HOUSE:
 
-                int twos = Arrays.stream(dice).filter(i -> Collections.frequency(Arrays.asList(dice), i) == 2).limit(1).map(x -> x * 2).sum();
-                int threes = Arrays.stream(dice).filter(i -> Collections.frequency(Arrays.asList(dice), i) == 3).sum();
+            case FULL_HOUSE: {
+                Map<Integer, Integer> lookup = getFrequencyMap();
 
-                Set<int[]> name = Arrays.asList(dice).stream().filter(i -> Collections.frequency(Arrays.asList(dice), i) > 1).collect(Collectors.toSet());
-                //int res = Arrays.stream(dice)//.filter(i -> Collections.frequency(Arrays.asList(dice), i) > 1)
-                  //  .collect(Collectors.groupingBy(Function.identity()), Collectors.counting())
-                    
-                if (twos != 0 && threes != 0) {
-                    return twos + threes;
+                if (lookup.containsValue(2) && lookup.containsValue(3)) {
+                    return lookup.entrySet().stream()
+                    .filter(entry -> entry.getValue() == 2)
+                    .map(entry -> entry.getKey() * 2)
+                    .findFirst()
+                    .orElse(-1)
+                    +
+                    lookup.entrySet().stream()
+                    .filter(entry -> entry.getValue() == 3)
+                    .map(entry -> entry.getKey() * 3)
+                    .findFirst()
+                    .orElse(-1);
                 }
+
                 return 0;
+            }
 
-            case FOUR_OF_A_KIND:
-                final int ones = Arrays.stream(dice).filter(i -> Collections.frequency(Arrays.asList(dice), i) == 1).sum();
-                final int fours = Arrays.stream(dice).filter(i -> Collections.frequency(Arrays.asList(dice), i) == 4).sum();
+            case FOUR_OF_A_KIND: {
+                Map<Integer, Integer> lookup = getFrequencyMap();
 
-                if (ones != 0 && fours != 0) {
-                    return ones + fours;
+                if (lookup.containsValue(4) || lookup.containsValue(5)) {
+                    return lookup.entrySet().stream()
+                    .filter(entry -> entry.getValue() >= 4)
+                    .map(entry -> entry.getKey() * 4)
+                    .findFirst()
+                    .orElse(-1);
                 }
+
                 return 0;
+            }
                 
             case LITTLE_STRAIGHT:
                 return Arrays.compare(LITTLE_STRAIGHT, dice) == 0? 30 : 0;
@@ -67,6 +74,15 @@ class Yacht {
             default:
                 return 0;
         }
+    }
+
+    private Map<Integer, Integer> getFrequencyMap(){
+        return Arrays.stream(dice)
+            .boxed()
+            .collect(Collectors.groupingBy(
+                i -> i, 
+                Collectors.reducing(0, e -> 1, Integer::sum)
+            ));
     }
 
 }
