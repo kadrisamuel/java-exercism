@@ -1,8 +1,23 @@
 import java.util.List;
 
 class BinarySearchTree<T extends Comparable<T>> {
+    Node<T> root;
+
     void insert(T value) {
-        throw new UnsupportedOperationException("Delete this statement and write your own implementation.");
+        if (root == null) {
+            this.root = new Node<>(value);
+        } else {
+            insertChild(root, value);
+        }
+    }
+
+    private void insertChild(Node<T> node, T value) {
+        if (node.getData().compareTo(value) >= 0) {
+            node.left = new Node<>(value);
+        }
+        if (node.getData().compareTo(value) < 0) {
+            node.right = new Node<>(value);
+        }
     }
 
     List<T> getAsSortedList() {
@@ -14,21 +29,30 @@ class BinarySearchTree<T extends Comparable<T>> {
     }
 
     Node<T> getRoot() {
-        throw new UnsupportedOperationException("Delete this statement and write your own implementation.");
+        return root;
     }
 
-    static class Node<T> {
+    static class Node<T extends Comparable<T>>{
+        T value;
+        Node<T> left;
+        Node<T> right;
+
+        Node(T value) {
+            this.value = value;
+            left = null;
+            right = null;
+        }
 
         Node<T> getLeft() {
-            throw new UnsupportedOperationException("Delete this statement and write your own implementation.");
+            return left;
         }
 
         Node<T> getRight() {
-            throw new UnsupportedOperationException("Delete this statement and write your own implementation.");
+            return right;
         }
 
         T getData() {
-            throw new UnsupportedOperationException("Delete this statement and write your own implementation.");
+            return value;
         }
 
     }
