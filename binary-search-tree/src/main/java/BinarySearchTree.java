@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 
 class BinarySearchTree<T extends Comparable<T>> {
@@ -13,10 +14,18 @@ class BinarySearchTree<T extends Comparable<T>> {
 
     private void insertChild(Node<T> node, T value) {
         if (node.getData().compareTo(value) >= 0) {
-            node.left = new Node<>(value);
+            if (node.left == null) {
+                node.left = new Node<>(value);
+            } else {
+                insertChild(node.left, value);
+            }
         }
         if (node.getData().compareTo(value) < 0) {
-            node.right = new Node<>(value);
+            if (node.right == null) {
+                node.right = new Node<>(value);
+            } else {
+                insertChild(node.right, value);
+            }
         }
     }
 
@@ -25,7 +34,25 @@ class BinarySearchTree<T extends Comparable<T>> {
     }
 
     List<T> getAsLevelOrderList() {
-        throw new UnsupportedOperationException("Delete this statement and write your own implementation.");
+        List<T> tree = new ArrayList<>();
+        tree.add(root.value);
+        breathTraversal(root, tree);
+        return tree;
+    }
+
+    private void breathTraversal(Node<T> node, List<T> countedNodes) {
+        if (node == null) {
+            return;
+        }
+        if (node.left != null) {
+            countedNodes.add(node.left.value);
+        }
+        if (node.right != null) {
+            countedNodes.add(node.right.value);
+        }
+
+        breathTraversal(node.left, countedNodes);
+        breathTraversal(node.right, countedNodes);
     }
 
     Node<T> getRoot() {
