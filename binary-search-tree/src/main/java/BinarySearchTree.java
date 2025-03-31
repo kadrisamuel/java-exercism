@@ -30,7 +30,18 @@ class BinarySearchTree<T extends Comparable<T>> {
     }
 
     List<T> getAsSortedList() {
-        throw new UnsupportedOperationException("Delete this statement and write your own implementation.");
+        List<T> result = new ArrayList<>();
+        depthTraversal(root, result);
+        return result;
+    }
+
+    private void depthTraversal(Node<T> node, List<T> countedNodes) {
+        if (node == null) {
+            return;
+        }
+        depthTraversal(node.left, countedNodes);
+        countedNodes.add(node.value);
+        depthTraversal(node.right, countedNodes);
     }
 
     List<T> getAsLevelOrderList() {
