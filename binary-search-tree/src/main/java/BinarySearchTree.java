@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 class BinarySearchTree<T extends Comparable<T>> {
-    Node<T> root;
+    private Node<T> root;
 
     void insert(T value) {
         if (root == null) {
@@ -71,9 +71,9 @@ class BinarySearchTree<T extends Comparable<T>> {
     }
 
     static class Node<T extends Comparable<T>>{
-        T value;
-        Node<T> left;
-        Node<T> right;
+        private T value;
+        private Node<T> left;
+        private Node<T> right;
 
         Node(T value) {
             this.value = value;
