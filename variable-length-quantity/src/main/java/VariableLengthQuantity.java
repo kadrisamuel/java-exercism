@@ -6,20 +6,18 @@ class VariableLengthQuantity {
     final static int BITMASK = 0x80; 
     
     List<String> encode(List<Long> numbers) {
-        List<String> result = new ArrayList<>();
+        return numbers.stream().map(num -> encodeNumber(num)).flatMap(List::stream).toList();
+    }
 
-        for (Long num : numbers) {
-            List<String> currentNumber = new ArrayList<>();
-            currentNumber.add(String.format("%#2x", (byte)(num & ~BITMASK)));
-            num >>= 7;
-            while (num != 0) {
-                currentNumber.add(0, String.format("%#2x", (byte)(num | BITMASK)));
-                num >>= 7;
-            }
-            result.addAll(currentNumber);
-
+    List<String> encodeNumber(Long number){
+        List<String> numberStrings = new ArrayList<>();
+        numberStrings.add(String.format("%#2x", (byte)(number & ~BITMASK)));
+        number >>= 7;
+        while (number != 0) {
+            numberStrings.add(0, String.format("%#2x", (byte)(number | BITMASK)));
+            number >>= 7;
         }
-        return result;
+        return numberStrings;
     }
 
     List<String> decode(List<Long> bytes) throws IllegalArgumentException {
