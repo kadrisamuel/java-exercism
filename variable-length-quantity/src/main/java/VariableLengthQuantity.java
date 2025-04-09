@@ -10,26 +10,11 @@ class VariableLengthQuantity {
      * shift 8th bit (index 7) of every byte left to the next byte
      * if current byte is rightmost (last), set 8th bit to 0
      * otherwise set 8th bit to 1
-     * 
-     * Decoding:
-     * long res = 0
-     * while byte is not last,
-     *  set 8th bit to 0 
-     *  and shift res left by 7
-     *  add byte to res
-     * if byte is last,
-     *  shift res left by 7
-     *  add  byte to res
-     *  add hex string of res to output list
-     * check if more bytes to process
      */
     
-    // Returns 1 if the bit at position n is one
-    // compress(x, 1L << n) == (x >> n & 1)
+
     final static int BITMASK = 0x80; // use | to set bit to 1, use &~ to set bit to 0
     
-    // TODO: decoding
-
     List<String> encode(List<Long> numbers) {
         List<String> result = new ArrayList<>();
 
@@ -62,11 +47,41 @@ class VariableLengthQuantity {
         return result;
     }
 
+    /* 
+    * Decoding:
+    * long res = 0
+    * if res != 0
+    *   shift res left by 7
+    * while byte is not last,
+    *  set 8th bit to 0 
+    *  add byte to res
+    * if byte is last,
+    *  add  byte to res
+    *  add hex string of res to output list
+    *  make res 0
+    */
     List<String> decode(List<Long> bytes) throws IllegalArgumentException {
+        List<String> result = new ArrayList<>();
         if (bytes.get(bytes.size()-1) > 127) {
             throw new IllegalArgumentException("Invalid variable-length quantity encoding");
         }
+        Long res = 0L;
+        for (Long num : bytes) {
+            if (res != 0L) {
+                res <<= 7;
+            }
+            // last byte in long
+            if (num < 128) {
+                
+                res += num;
+                result.add(String.format("%#2x", res));
+                res = 0L;
+                continue;
+            }
+            num = (num & ~BITMASK);
+            res += num;
 
-        return null;
+        }
+        return result;
     }
 }
