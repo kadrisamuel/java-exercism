@@ -2,15 +2,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 class VariableLengthQuantity {
-    // limit is 4 bytes
-    // bits go from N-0, 
+    // limit is 4 bytes,
+    // bits go from N to 0,
+    // Encoding: 
     // shift 8th bit (index 7) of every byte left to the next byte
     // if current byte is rightmost (last), set 8th bit to 0
     // otherwise set 8th bit to 1
+    // Decoding:
+    // 
 
     // Returns 1 if the bit at position n is one
     // compress(x, 1L << n) == (x >> n & 1)
-    final static int BITMASK = 0x80; // use | to set bit to 1, use ~& to set bit to 0
+    final static int BITMASK = 0x80; // use | to set bit to 1, use &~ to set bit to 0
+    
+    // TODO: error cases and decoding
 
     List<String> encode(List<Long> numbers) {
         List<String> result = new ArrayList<>();
@@ -41,7 +46,10 @@ class VariableLengthQuantity {
         return result;
     }
 
-    List<String> decode(List<Long> bytes) {
-        throw new UnsupportedOperationException("Delete this statement and write your own implementation.");
+    List<String> decode(List<Long> bytes) throws IllegalArgumentException {
+        if (bytes.get(bytes.size()-1) > 127) {
+            throw new IllegalArgumentException("Invalid variable-length quantity encoding");
+        }
+        return null;
     }
 }
