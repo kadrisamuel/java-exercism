@@ -25,7 +25,7 @@ class School {
         if (allStudents.isEmpty()) {
             return List.of();
         }
-        return roster.stream().flatMap(s -> s.stream()).toList();
+        return roster.stream().flatMap(SortedSet::stream).toList();
     }
 
     List<String> grade(int grade) {
