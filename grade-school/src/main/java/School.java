@@ -6,8 +6,8 @@ import java.util.stream.IntStream;
 
 class School {
     // there are 7 grades
-    List<SortedSet<String>> roster = new ArrayList<>(7);
-    SortedSet<String> allStudents = new TreeSet<>();
+    private List<SortedSet<String>> roster = new ArrayList<>(7);
+    private final SortedSet<String> allStudents = new TreeSet<>();
 
     public School() {
         IntStream.range(0, 7)
