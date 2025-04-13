@@ -10,11 +10,10 @@ class CollatzCalculator {
         }
         steps += 1;
         if (start % 2 == 0) {
-            computeStepCount(start / 2);
+            return computeStepCount(start / 2);
         } else {
-            computeStepCount(start * 3 + 1);
+            return computeStepCount(start * 3 + 1);
         }
-        return steps;
     }
 
 }
