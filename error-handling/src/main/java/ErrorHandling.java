@@ -44,7 +44,7 @@ class ErrorHandling {
 
     Optional<Integer> handleErrorByReturningOptionalInstance(String integer) {
         try {
-            return Optional.ofNullable(Integer.valueOf(integer));
+            return Optional.of(Integer.valueOf(integer));
         } catch (NumberFormatException e) {
             return Optional.empty();
         }
