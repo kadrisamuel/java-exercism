@@ -16,13 +16,13 @@ class IsbnVerifier {
             return false;
         }
 
-        int temp = IntStream.rangeClosed(1, 10)
+        if (IntStream.range(0, 9).anyMatch(x -> isbnToVerify[x] == 10)) {
+            return false;
+        }
+
+        return IntStream.rangeClosed(1, 10)
             .map(i -> isbnToVerify[10 - i] * i)
-            .sum();
-
-        boolean res = temp % 11 == 0;
-
-        return res;
+            .sum() % 11 == 0;
     }
 
     private int[] strip(String stringToVerify) {
