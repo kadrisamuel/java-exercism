@@ -6,6 +6,10 @@ class IsbnVerifier {
     private static final List<Character> ISBN_DIGITS = List.of('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'X');
 
     boolean isValid(String stringToVerify) {
+        if (!stringToVerify.matches("[0-9X-]+")) {
+            return false;
+        }
+
         int[] isbnToVerify = strip(stringToVerify);
 
         if (isbnToVerify.length != 10) {
