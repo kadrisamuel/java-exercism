@@ -133,16 +133,11 @@ class GrepTool {
                     linenumber += 1;
                     Matcher matcher; 
                     matcher = pattern.matcher(line);
+                    boolean matchFound = matchWholeLine? matcher.matches() ^ invert : matcher.find() ^ invert;
 
-                    if (matchWholeLine) {
-                        if (matcher.matches()) {
-                            results.add(new Result(file, linenumber, line));
-                        }
-                    } else {
-                        if (matcher.find()) {
-                            results.add(new Result(file, linenumber, line));
-                        }
-                    }
+                    if (matchFound) {
+                        results.add(new Result(file, linenumber, line));
+                    } 
                     
                 }
             } catch (IOException e) {
