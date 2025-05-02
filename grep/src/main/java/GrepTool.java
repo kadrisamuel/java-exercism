@@ -17,9 +17,7 @@ class GrepTool {
         private boolean caseSensitive = true;
         private boolean invert = false;
         private boolean matchWholeLine = false;
-
         private boolean multipleFiles = false;
-
         private List<Result> results;
         private Pattern pattern;
 
@@ -34,11 +32,6 @@ class GrepTool {
             this.linenumber = linenumber;
             this.line = line;
         }
-
-        public String getFilename() {
-            return filename;
-        }
-
     }
 
     String grep(String phrase, List<String> flags, List<String> files) {
@@ -62,7 +55,7 @@ class GrepTool {
 
         if (writeOnlyFilenames) {
             results.stream()
-                .filter(distinctByKey(x -> x.getFilename()))
+                .filter(distinctByKey(x -> x.filename))
                 .forEach(entry -> {
                     if (!output.isEmpty()) {
                         output.append("\n");
@@ -89,11 +82,9 @@ class GrepTool {
 
     public static <T> Predicate<T> distinctByKey(
         Function<? super T, ?> keyExtractor) {
-  
         Map<Object, Boolean> seen = new ConcurrentHashMap<>(); 
         return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null; 
     }
-
 
     /* Flags
     * -n Prepend the line number and a colon (':') to each line in the output, placing the number after the filename (if present).
@@ -114,15 +105,11 @@ class GrepTool {
             }
         });
     }
-    // TODO: handle inversion pattern
+
     private void parseFiles(String phrase, List<String> files) {
         results = new ArrayList<>();
-
-        if (!caseSensitive) {
-            pattern = Pattern.compile(Pattern.quote(phrase), Pattern.CASE_INSENSITIVE);
-        } else {
-            pattern = Pattern.compile(phrase);
-        }
+        pattern = caseSensitive? Pattern.compile(phrase) : 
+            Pattern.compile(Pattern.quote(phrase), Pattern.CASE_INSENSITIVE);
 
         files.stream().forEach(file -> {
             try (BufferedReader reader = Files.newBufferedReader(Paths.get(file))) {
@@ -131,17 +118,14 @@ class GrepTool {
     
                 while ((line = reader.readLine()) != null) {
                     linenumber += 1;
-                    Matcher matcher; 
-                    matcher = pattern.matcher(line);
-                    boolean matchFound = matchWholeLine? matcher.matches() ^ invert : matcher.find() ^ invert;
-
+                    Matcher matcher = pattern.matcher(line);
+                    boolean matchFound = matchWholeLine? matcher.matches() ^ invert : 
+                        matcher.find() ^ invert;
                     if (matchFound) {
                         results.add(new Result(file, linenumber, line));
                     } 
-                    
                 }
             } catch (IOException e) {
-                System.err.println("IOException " + e);
             }
         });
     }
