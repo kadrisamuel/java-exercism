@@ -8,6 +8,22 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 class GrepTool {
+        /* Flags
+        * -n Prepend the line number and a colon (':') to each line in the output, placing the number after the filename (if present).
+        * -l Output only the names of the files that contain at least one matching line.
+        * -i Match using a case-insensitive comparison.
+        * -v Invert the program -- collect all lines that fail to match.
+        * -x Search only for lines where the search string matches the entire line.
+        */
+        boolean writeLineNumber = false;
+        boolean writeOnlyFilename = false;
+        boolean caseSensitive = true;
+        boolean invert = false;
+        boolean matchWholeLine = false;
+
+        List<Result> results;
+        Pattern pattern;
+
 
     static class Result {
         private final String filename;
@@ -23,8 +39,34 @@ class GrepTool {
     }
 
     String grep(String phrase, List<String> flags, List<String> files) {
-        List<Result> results = new ArrayList<>();
-        Pattern pattern = Pattern.compile(phrase);
+        parseFiles(phrase, files);
+        setFlags(flags);
+
+        return results.get(0).line;
+    }
+
+    private String printResult() {
+        
+        return results.get(0).line;
+    }
+
+    private void setFlags(List<String> flags) {
+        flags.stream().forEach(flag -> {
+            switch (flag) {
+                case "-n" -> writeLineNumber = true;
+                case "-l" -> writeOnlyFilename = true;
+                case "-i" -> caseSensitive = false;
+                case "-v" -> invert = true;
+                case "-x" -> matchWholeLine = true;
+                default -> {
+                }
+            }
+        });
+    }
+
+    private void parseFiles(String phrase, List<String> files) {
+        results = new ArrayList<>();
+        pattern = Pattern.compile(phrase);
 
         files.stream().forEach(file -> {
             try (BufferedReader reader = Files.newBufferedReader(Paths.get(file))) {
@@ -42,10 +84,7 @@ class GrepTool {
             } catch (IOException e) {
                 System.err.println("IOException " + e);
             }
-
         });
-
-        return results.get(0).line;
     }
 
 }
