@@ -45,7 +45,7 @@ class GrepTool {
 
         });
 
-        return null;
+        return results.get(0).line;
     }
 
 }
