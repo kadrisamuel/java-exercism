@@ -4,6 +4,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,14 +35,18 @@ class GrepTool {
             this.line = line;
         }
 
+        public String getFilename() {
+            return filename;
+        }
+
     }
 
     String grep(String phrase, List<String> flags, List<String> files) {
         if (files.size() > 1) {
             multipleFiles = true;
         }
-        parseFiles(phrase, files);
         setFlags(flags);
+        parseFiles(phrase, files);
 
         return printResult();
     }
@@ -52,27 +60,41 @@ class GrepTool {
     private String printResult() {
         StringBuilder output = new StringBuilder();
 
-        results.stream().forEach(entry -> {
-            if (!output.isEmpty()) {
-                output.append("\n");
-            }
-            if (writeOnlyFilenames || multipleFiles) {
-                output.append(entry.filename);
-                if (!writeOnlyFilenames) {
-                    output.append(":");
+        if (writeOnlyFilenames) {
+            results.stream()
+                .filter(distinctByKey(x -> x.getFilename()))
+                .forEach(entry -> {
+                    if (!output.isEmpty()) {
+                        output.append("\n");
+                    }
+                    output.append(entry.filename);
+                });
+        } else {
+            results.stream().forEach(entry -> {
+                if (!output.isEmpty()) {
+                    output.append("\n");
                 }
-            }
-
-            if (writeLineNumber) {
-                output.append(entry.linenumber).append(":");
-            }
-            if (!writeOnlyFilenames) {
+                if (multipleFiles) {
+                    output.append(entry.filename).append(":");
+                }
+                if (writeLineNumber) {
+                    output.append(entry.linenumber).append(":");
+                }
                 output.append(entry.line);
-            }
-        });
+            });
+        }
 
         return output.toString();
     }
+
+    public static <T> Predicate<T> distinctByKey(
+        Function<? super T, ?> keyExtractor) {
+  
+        Map<Object, Boolean> seen = new ConcurrentHashMap<>(); 
+        return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null; 
+    }
+
+
     /* Flags
     * -n Prepend the line number and a colon (':') to each line in the output, placing the number after the filename (if present).
     * -l Output only the names of the files that contain at least one matching line.
@@ -92,12 +114,16 @@ class GrepTool {
             }
         });
     }
-    // TODO: handle case sensitivity flag
     // TODO: handle inversion pattern
     // TODO: handle whole line matching
     private void parseFiles(String phrase, List<String> files) {
         results = new ArrayList<>();
-        pattern = Pattern.compile(phrase);
+
+        if (!caseSensitive) {
+            pattern = Pattern.compile(Pattern.quote(phrase), Pattern.CASE_INSENSITIVE);
+        } else {
+            pattern = Pattern.compile(phrase);
+        }
 
         files.stream().forEach(file -> {
             try (BufferedReader reader = Files.newBufferedReader(Paths.get(file))) {
@@ -106,7 +132,8 @@ class GrepTool {
     
                 while ((line = reader.readLine()) != null) {
                     linenumber += 1;
-                    Matcher matcher = pattern.matcher(line);
+                    Matcher matcher; 
+                    matcher = pattern.matcher(line);
 
                     if (matcher.find()) {
                         results.add(new Result(file, linenumber, line));
