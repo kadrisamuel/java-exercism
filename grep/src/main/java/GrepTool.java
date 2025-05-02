@@ -105,7 +105,7 @@ class GrepTool {
         flags.stream().forEach(flag -> {
             switch (flag) {
                 case "-n" -> writeLineNumber = true;
-                case "-l" -> {writeOnlyFilenames = true; writeLineNumber = false;}
+                case "-l" -> writeOnlyFilenames = true;
                 case "-i" -> caseSensitive = false;
                 case "-v" -> invert = true;
                 case "-x" -> matchWholeLine = true;
@@ -115,7 +115,6 @@ class GrepTool {
         });
     }
     // TODO: handle inversion pattern
-    // TODO: handle whole line matching
     private void parseFiles(String phrase, List<String> files) {
         results = new ArrayList<>();
 
@@ -135,9 +134,16 @@ class GrepTool {
                     Matcher matcher; 
                     matcher = pattern.matcher(line);
 
-                    if (matcher.find()) {
-                        results.add(new Result(file, linenumber, line));
+                    if (matchWholeLine) {
+                        if (matcher.matches()) {
+                            results.add(new Result(file, linenumber, line));
+                        }
+                    } else {
+                        if (matcher.find()) {
+                            results.add(new Result(file, linenumber, line));
+                        }
                     }
+                    
                 }
             } catch (IOException e) {
                 System.err.println("IOException " + e);
